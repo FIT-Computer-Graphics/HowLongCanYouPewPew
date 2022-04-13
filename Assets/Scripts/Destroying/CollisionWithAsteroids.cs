@@ -16,7 +16,7 @@ namespace Scripts.Destroying
         {
             if (collision.gameObject != spaceShip) return;
             Destroy(spaceShip);
-            var explosion=Instantiate(Effect,Player.transform.position,Quaternion.identity);
+            var explosion = Instantiate(Effect,Player.transform.position,Quaternion.identity);
             Destroy(explosion,1.5f);
             Cursor.lockState = CursorLockMode.None;
             Cursor.visible = true;
@@ -24,18 +24,11 @@ namespace Scripts.Destroying
 
         private void Update()
         {
-            if (!spaceShip)//ucita scenu nakon odredjenog vremena , mozemo dodat kasnije animaciju
-            {
-                Player.GetComponent<SpaceShipController>().enabled = false;
-                if (timeRemaining > 0)
-                {
-                    timeRemaining -= Time.deltaTime;
-                }
-                else
-                {
-                    SceneManager.LoadScene("RestartMenu");
-                }
-            }
+            if (spaceShip) return;
+            Player.GetComponent<SpaceShipController>().enabled = false;
+            
+            if (timeRemaining > 0) timeRemaining -= Time.deltaTime;
+            else SceneManager.LoadScene("RestartMenu");
         }
     }
 }
