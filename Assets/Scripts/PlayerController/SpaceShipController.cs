@@ -94,10 +94,12 @@ namespace Scripts.PlayerController
                     
                     // Destroy the object
                     // Health, make it disappear, bla bla bla
+
                     hitInfo.transform.gameObject.SetActive(false);
                     var explosion = Instantiate(explosionEffect, hitInfo.point, Quaternion.identity);
                     explosion.Emit(1);
-                    
+
+
                 }
                 // If it doesn't, just make it go forward I guess idk
                 else
