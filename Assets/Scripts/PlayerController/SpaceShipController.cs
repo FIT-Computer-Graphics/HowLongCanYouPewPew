@@ -94,7 +94,7 @@ namespace Scripts.PlayerController
                     
                     // Destroy the object
                     // Health, make it disappear, bla bla bla
-                    hitInfo.collider.gameObject.SetActive(false);
+                    hitInfo.transform.gameObject.SetActive(false);
                     var explosion = Instantiate(explosionEffect, hitInfo.point, Quaternion.identity);
                     explosion.Emit(1);
                     
