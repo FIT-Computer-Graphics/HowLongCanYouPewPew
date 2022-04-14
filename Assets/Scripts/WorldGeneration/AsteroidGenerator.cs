@@ -12,6 +12,8 @@ namespace Scripts.WorldGeneration
         [SerializeField] private GameObject asteroid;
 
         [SerializeField] private float startSafeRange;
+        [SerializeField] private bool randomizeRotations;
+        [SerializeField] private float randomFloatingSpeed;
 
         private readonly List<GameObject> objectsToPlace = new List<GameObject>();
         private Vector3 spawnPoint;
@@ -28,6 +30,12 @@ namespace Scripts.WorldGeneration
 
                 objectsToPlace.Add(Instantiate(asteroid, spawnPoint,
                     Quaternion.Euler(Random.Range(0f, 360f), Random.Range(0f, 360f), Random.Range(0f, 360f))));
+                    
+                if (randomizeRotations) objectsToPlace[i].transform.Rotate(Random.Range(0f, 360f), Random.Range(0f, 360f), Random.Range(0f, 360f));
+                // Make them float randomly
+                objectsToPlace[i].GetComponent<Rigidbody>().velocity = new Vector3(Random.Range(-randomFloatingSpeed, randomFloatingSpeed), Random.Range(-randomFloatingSpeed, randomFloatingSpeed), Random.Range(-randomFloatingSpeed, randomFloatingSpeed));
+                
+                
                 objectsToPlace[i].transform.parent = transform;
             }
 

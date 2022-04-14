@@ -6,6 +6,7 @@ TagManager:
   tags:
   - Shootable
   - Pause
+  - Asteroid
   layers:
   - Default
   - TransparentFX

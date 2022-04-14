@@ -1,10 +1,14 @@
 using UnityEngine;
-
+using Scripts.Asteroids;
+using Scripts.Enemy;
 namespace Scripts.PlayerController
 {
     public class SpaceShipController : MonoBehaviour
     {
         #region Variables
+        
+        // TESTTESTTEST
+        public GameObject EnemySpawner;
         
         // Movement
         [SerializeField] private float forwardSpeed;
@@ -26,8 +30,7 @@ namespace Scripts.PlayerController
         public Transform[] raycastOrigin;
         public ParticleSystem hitEffect;
         public TrailRenderer[] tracerEffects;
-        public ParticleSystem explosionEffect;
-        
+
         private bool isFiring;
         public int fireRate = 25;
         private float accumulatedTime;
@@ -46,6 +49,13 @@ namespace Scripts.PlayerController
             CalculateMovement();
             ToggleFiring();
             CalculateShooting();
+            
+            // TESTTESTTEST
+            if (Input.GetKeyDown(KeyCode.Space))
+            {
+                EnemySpawner.GetComponent<EnemySpawner>().SpawnEnemies(10, 50);
+            }
+            
         }
 
         private void ToggleFiring()
@@ -85,32 +95,41 @@ namespace Scripts.PlayerController
                     transform1.forward = hitInfo.normal;
                     hitEffect.Emit(1);
                     
-                    foreach (var tracerEffect in tracerEffects)
-                    {
-                        var tracer = Instantiate(tracerEffect, ray.origin, Quaternion.identity);
-                        tracer.AddPosition(ray.origin);
-                        tracer.transform.position = hitInfo.point;
-                    }
-                    
-                    // Destroy the object
-                    // Health, make it disappear, bla bla bla
-
-                    hitInfo.transform.gameObject.SetActive(false);
-                    var explosion = Instantiate(explosionEffect, hitInfo.point, Quaternion.identity);
-                    explosion.Emit(1);
-
-
+                    SpawnTracers();
+                    HandleDamage(hitInfo);
                 }
                 // If it doesn't, just make it go forward I guess idk
                 else
                 {
-                    foreach (var tracerEffect in tracerEffects)
-                    {
-                        var tracer = Instantiate(tracerEffect, ray.origin, Quaternion.identity);
-                        tracer.AddPosition(ray.origin);
-                        tracer.AddPosition(ray.GetPoint(100f));
-                    }
+                    SpawnTracers(true);
                 }
+            }
+        }
+
+        private void HandleDamage(RaycastHit raycastHit)
+        {
+            Debug.Log($"Hit {raycastHit.transform.gameObject.tag}");
+            switch (raycastHit.transform.gameObject.tag)
+            {
+                case "Asteroid":
+                    hitInfo.transform.GetComponent<AsteroidController>().TakeDamage();
+                    break;
+                case "Enemy":
+                    // Do stuff
+                    break;
+            }
+
+        }
+
+        private void SpawnTracers(bool infinite = false)
+        {
+            foreach (var tracerEffect in tracerEffects)
+            {
+                var tracer = Instantiate(tracerEffect, ray.origin, Quaternion.identity);
+                tracer.AddPosition(ray.origin);
+                if (infinite) tracer.AddPosition(ray.GetPoint(100f));
+                else tracer.transform.position = hitInfo.point;
+                
             }
         }
 
