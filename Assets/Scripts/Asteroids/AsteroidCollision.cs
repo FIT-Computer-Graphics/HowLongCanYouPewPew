@@ -4,9 +4,9 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.Serialization;
 
-namespace Scripts.Destroying
+namespace Scripts.Asteroids
 {
-    public class Collisions : MonoBehaviour
+    public class AsteroidCollision : MonoBehaviour
     {
         [SerializeField] private GameObject spaceShip;
 
@@ -15,8 +15,6 @@ namespace Scripts.Destroying
 
         [FormerlySerializedAs("Effect")] [SerializeField]
         private GameObject effect;
-
-        [SerializeField] private string[] collidableTags;
 
         private float timeRemaining = 3f;
 
@@ -33,15 +31,12 @@ namespace Scripts.Destroying
         {
             Debug.Log(collision.gameObject.tag);
             if (collision.gameObject != spaceShip) return;
-            if (!Collidable(collision.gameObject)) return;
             Destroy(spaceShip);
             var explosion = Instantiate(effect, player.transform.position, Quaternion.identity);
             Destroy(explosion, 1.5f);
             Cursor.lockState = CursorLockMode.None;
             Cursor.visible = true;
         }
-
-        private bool Collidable(GameObject collisionGameObject) => collidableTags.All(tag => !collisionGameObject.CompareTag(tag));
 
     }
 }

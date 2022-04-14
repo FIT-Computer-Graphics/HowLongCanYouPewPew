@@ -12,8 +12,9 @@ namespace Scripts.Enemy
             // Randomly spawn enemies around the player
             for (var i = 0; i < amount; i++)
             {
-                var spawnPosition = new Vector3(player.position.x + Random.Range(-rangeAroundPlayer, rangeAroundPlayer),
-                    player.position.y, player.position.z + Random.Range(-rangeAroundPlayer, rangeAroundPlayer));
+                var position = player.position;
+                var spawnPosition = new Vector3(position.x + Random.Range(-rangeAroundPlayer, rangeAroundPlayer),
+                    position.y, position.z + Random.Range(-rangeAroundPlayer, rangeAroundPlayer));
                 Instantiate(enemy, spawnPosition, Quaternion.identity);
             }
         }

@@ -55,7 +55,7 @@ namespace Scripts.Enemy
                 //Attack if close enough
                 if (distance < fireDist)
                 {
-                    //insert attack commands here when ready
+                    
                 }
 
                 if (distance < minDist)
