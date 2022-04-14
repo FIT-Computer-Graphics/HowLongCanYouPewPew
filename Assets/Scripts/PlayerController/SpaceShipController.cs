@@ -10,6 +10,10 @@ namespace Scripts.PlayerController
         // TESTTESTTEST
         public GameObject EnemySpawner;
         
+        // Sounds
+        public AudioSource ShipAudioSource;
+        public AudioClip ShootSound;
+        
         // Movement
         [SerializeField] private float forwardSpeed;
         [SerializeField] private float hoverSpeed;
@@ -104,6 +108,10 @@ namespace Scripts.PlayerController
                     SpawnTracers(true);
                 }
             }
+            
+            // Play the sound
+            ShipAudioSource.pitch = Random.Range(0.7f, 0.8f);
+            ShipAudioSource.PlayOneShot(ShootSound);
         }
 
         private void HandleDamage(RaycastHit raycastHit)
