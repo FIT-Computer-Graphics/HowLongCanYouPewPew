@@ -1,20 +1,24 @@
 using UnityEngine;
-using Scripts.PlayerController;
+
 namespace Scripts.Camera
 {
-    
     public class CameraFollow : MonoBehaviour
     {
+        public enum RelativePosition
+        {
+            InitialPosition,
+            Position1,
+            Position2
+        }
+
         public float smoothness;
-        public Transform targetObject;//sada ce kamera pratit Player umjesto Spacesparow
-        private Vector3 initialOffset;
-        private Vector3 cameraPosition;
-       
-        public enum RelativePosition { InitialPosition, Position1, Position2 }
+        public Transform targetObject; //sada ce kamera pratit Player umjesto Spacesparow
         public RelativePosition relativePosition;
         public Vector3 position1;
         public Vector3 position2;
-      
+        private Vector3 cameraPosition;
+        private Vector3 initialOffset;
+
         private void Start()
         {
             relativePosition = RelativePosition.InitialPosition;
@@ -23,12 +27,9 @@ namespace Scripts.Camera
 
         private void Update()
         {
-           
-                cameraPosition = targetObject.position + CameraOffset(relativePosition);
-                transform.position = Vector3.Lerp(transform.position, cameraPosition, smoothness*Time.deltaTime);
-                transform.LookAt(targetObject);
-                
-                
+            cameraPosition = targetObject.position + CameraOffset(relativePosition);
+            transform.position = Vector3.Lerp(transform.position, cameraPosition, smoothness * Time.deltaTime);
+            transform.LookAt(targetObject);
         }
 
         private Vector3 CameraOffset(RelativePosition relPosition)
@@ -42,5 +43,4 @@ namespace Scripts.Camera
             return currentOffset;
         }
     }
-
 }

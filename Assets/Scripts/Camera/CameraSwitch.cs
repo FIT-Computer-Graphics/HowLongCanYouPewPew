@@ -3,17 +3,18 @@ using UnityEngine.Serialization;
 
 namespace Scripts.Camera
 {
-    
     public class CameraSwitch : MonoBehaviour
     {
         public Transform Camera;
 
-        [FormerlySerializedAs("First Person Position")] public Transform firstPersonPosition;
+        [FormerlySerializedAs("First Person Position")]
+        public Transform firstPersonPosition;
 
-        [FormerlySerializedAs("Third Person Position")] public Transform thirdPersonPosition;
+        [FormerlySerializedAs("Third Person Position")]
+        public Transform thirdPersonPosition;
 
         public string currentCamera;
-        
+
         private void Start()
         {
             currentCamera = "Third";
@@ -23,10 +24,7 @@ namespace Scripts.Camera
 
         private void Update()
         {
-          
-                if (Input.GetKeyDown(KeyCode.V)) ToggleCamera();
-            
-            
+            if (Input.GetKeyDown(KeyCode.V)) ToggleCamera();
         }
 
         private void ToggleCamera()
@@ -52,9 +50,5 @@ namespace Scripts.Camera
             var follower = Camera.gameObject.GetComponent<CameraFollow>();
             follower.enabled = !follower.enabled;
         }
-
-       
     }
-
 }
-

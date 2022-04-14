@@ -30,12 +30,17 @@ namespace Scripts.WorldGeneration
 
                 objectsToPlace.Add(Instantiate(asteroid, spawnPoint,
                     Quaternion.Euler(Random.Range(0f, 360f), Random.Range(0f, 360f), Random.Range(0f, 360f))));
-                    
-                if (randomizeRotations) objectsToPlace[i].transform.Rotate(Random.Range(0f, 360f), Random.Range(0f, 360f), Random.Range(0f, 360f));
+
+                if (randomizeRotations)
+                    objectsToPlace[i].transform.Rotate(Random.Range(0f, 360f), Random.Range(0f, 360f),
+                        Random.Range(0f, 360f));
                 // Make them float randomly
-                objectsToPlace[i].GetComponent<Rigidbody>().velocity = new Vector3(Random.Range(-randomFloatingSpeed, randomFloatingSpeed), Random.Range(-randomFloatingSpeed, randomFloatingSpeed), Random.Range(-randomFloatingSpeed, randomFloatingSpeed));
-                
-                
+                objectsToPlace[i].GetComponent<Rigidbody>().velocity = new Vector3(
+                    Random.Range(-randomFloatingSpeed, randomFloatingSpeed),
+                    Random.Range(-randomFloatingSpeed, randomFloatingSpeed),
+                    Random.Range(-randomFloatingSpeed, randomFloatingSpeed));
+
+
                 objectsToPlace[i].transform.parent = transform;
             }
 

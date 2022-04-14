@@ -1,4 +1,3 @@
-using System;
 using UnityEngine;
 
 namespace Scripts.Asteroids
@@ -14,26 +13,36 @@ namespace Scripts.Asteroids
         public void TakeDamage()
         {
             if (gameObject == null) return;
+            if (health <= 0) return;
             health -= damagePerShot;
             if (health > 0) return;
-            Destroy(gameObject);
-            
-            var emptyGameObject = new GameObject().AddComponent<AudioSource>();
-            emptyGameObject = Instantiate(emptyGameObject, transform.position, Quaternion.identity);
-            
-            var audioSource = emptyGameObject.GetComponent<AudioSource>();
-            audioSource.spatialBlend = 1;
-            audioSource.volume = 1;
-            audioSource.spread = 360;
-            audioSource.PlayOneShot(explosionSounds[UnityEngine.Random.Range(0, explosionSounds.Length)]);
-            
-            Destroy(emptyGameObject, audioSource.clip.length + 1);
-            
-            var explosion = Instantiate(explosionEffect, gameObject.transform.position, Quaternion.identity);
-            explosion.Emit(1);
+            Die();
 
         }
 
+        private void Die()
+        {
+            PlayAudio();
+            PlayExplosionEffect();
+
+            Destroy(gameObject);
+        }
+
+        private void PlayExplosionEffect()
+        {
+            var explosion = Instantiate(explosionEffect, gameObject.transform.position, Quaternion.identity);
+            explosion.Emit(1);
+        }
+
+        private void PlayAudio()
+        {
+            var audioSource =
+                Instantiate(new GameObject().AddComponent<AudioSource>(), transform.position, Quaternion.identity);
+            audioSource.spatialBlend = 1;
+            audioSource.volume = 1;
+            audioSource.spread = 360;
+            audioSource.PlayOneShot(explosionSounds[Random.Range(0, explosionSounds.Length)]);
+            Destroy(audioSource.gameObject, 5f);
+        }
     }
 }
-

@@ -1,7 +1,4 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Serialization;
 
 public class EnemyController : MonoBehaviour
 {
@@ -9,16 +6,10 @@ public class EnemyController : MonoBehaviour
     public Transform enemy;
     public int health;
     public float speed;
-    
+
     public void TakeDamage(int damage)
     {
         health -= damage;
-        if (health <= 0)
-        {
-            Destroy(enemy.gameObject);
-        }
+        if (health <= 0) Destroy(enemy.gameObject);
     }
-
-
 }
-

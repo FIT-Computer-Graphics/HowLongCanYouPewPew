@@ -7,6 +7,7 @@ TagManager:
   - Shootable
   - Pause
   - Asteroid
+  - Enemy
   layers:
   - Default
   - TransparentFX
