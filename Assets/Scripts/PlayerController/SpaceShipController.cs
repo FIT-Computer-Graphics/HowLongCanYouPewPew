@@ -1,5 +1,5 @@
-using Scripts.Asteroids;
 using Scripts.Enemy;
+using Scripts.Asteroids;
 using UnityEngine;
 
 namespace Scripts.PlayerController
