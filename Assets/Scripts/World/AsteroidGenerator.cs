@@ -1,12 +1,13 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
-namespace Scripts.WorldGeneration
+namespace Scripts.World
 {
     public class AsteroidGenerator : MonoBehaviour
     {
-        [SerializeField] private float spawnRange;
-
+        [SerializeField] public float spawnRange;
         [SerializeField] private float amountToSpawn;
 
         [SerializeField] private GameObject asteroid;
@@ -20,6 +21,11 @@ namespace Scripts.WorldGeneration
 
         // Start is called before the first frame update
         private void Start()
+        {
+            SpawnAsteroids();
+        }
+
+        private void SpawnAsteroids()
         {
             for (var i = 0; i < amountToSpawn; i++)
             {

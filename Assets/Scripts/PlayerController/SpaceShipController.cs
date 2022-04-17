@@ -70,7 +70,9 @@ namespace Scripts.PlayerController
             }
 
             // Play the sound
-            ShipAudioSource.pitch = Random.Range(0.7f, 0.8f);
+            ShipAudioSource.pitch = Random.Range(0.7f, 0.95f);
+            ShipAudioSource.PlayOneShot(ShootSound);
+            ShipAudioSource.pitch = Random.Range(0.7f, 0.95f);
             ShipAudioSource.PlayOneShot(ShootSound);
         }
 
@@ -128,7 +130,7 @@ namespace Scripts.PlayerController
 
         // TESTTESTTEST
         public GameObject EnemySpawner;
-
+        
         // Sounds
         public AudioSource ShipAudioSource;
         public AudioClip ShootSound;
