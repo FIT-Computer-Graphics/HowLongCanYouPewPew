@@ -1,46 +1,30 @@
+using System;
 using UnityEngine;
 
 namespace Scripts.Camera
 {
     public class CameraFollow : MonoBehaviour
     {
-        public enum RelativePosition
-        {
-            InitialPosition,
-            Position1,
-            Position2
-        }
 
-        public float smoothness;
-        public Transform targetObject; //sada ce kamera pratit Player umjesto Spacesparow
-        public RelativePosition relativePosition;
-        public Vector3 position1;
-        public Vector3 position2;
-        private Vector3 cameraPosition;
-        private Vector3 initialOffset;
-
-        private void Start()
-        {
-            relativePosition = RelativePosition.InitialPosition;
-            initialOffset = transform.position - targetObject.position;
-        }
-
+        public Transform TPP;
+        public Transform FPP;
+        public Transform POV;
+        public Transform spaceship;
+        
         private void Update()
         {
-            cameraPosition = targetObject.position + CameraOffset(relativePosition);
-            transform.position = Vector3.Lerp(transform.position, cameraPosition, smoothness * Time.deltaTime);
-            transform.LookAt(targetObject);
+            transform.position = TPP.position;
+            if (spaceship!=null&&!Input.GetKey(KeyCode.V))
+            {
+                transform.LookAt(spaceship.transform);
+            }
+            if (Input.GetKey(KeyCode.V)&&spaceship!=null)
+            {
+                transform.position = FPP.position;
+                transform.LookAt(POV);
+            }
         }
 
-        private Vector3 CameraOffset(RelativePosition relPosition)
-        {
-            var currentOffset = relPosition switch
-            {
-                RelativePosition.Position1 => position1,
-                RelativePosition.Position2 => position2,
-                _ => initialOffset
-            };
-            return currentOffset;
-        }
+       
     }
 }
