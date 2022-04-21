@@ -8,20 +8,22 @@ namespace Scripts.Camera
 
         public Transform TPP;
         public Transform FPP;
-        public Transform POV;
         public Transform spaceship;
         
         private void Update()
         {
-            transform.position = TPP.position;
+            
             if (spaceship!=null&&!Input.GetKey(KeyCode.V))
             {
+                transform.position = TPP.position;
                 transform.LookAt(spaceship.transform);
+                transform.SetParent(null);
             }
             if (Input.GetKey(KeyCode.V)&&spaceship!=null)
             {
                 transform.position = FPP.position;
-                transform.LookAt(POV);
+                transform.SetParent(FPP);
+                transform.rotation = FPP.rotation;
             }
         }
 
