@@ -585,6 +585,7 @@ GameObject:
   - component: {fileID: 4263487280611358850}
   - component: {fileID: 4286406212563760087}
   - component: {fileID: 2378778330279047605}
+  - component: {fileID: 5275554396167727622}
   m_Layer: 0
   m_Name: Enemy
   m_TagString: Enemy
@@ -696,6 +697,21 @@ MeshCollider:
   m_Convex: 1
   m_CookingOptions: 30
   m_Mesh: {fileID: 721608799864582647, guid: d32d4a735694a9f4f97a42117a1f919c, type: 3}
+--- !u!114 &5275554396167727622
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4286406212563760086}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8d952099949a0a74eb0aca07db39d8d4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  enemy: {fileID: 0}
+  health: 0
+  Score: {fileID: 0}
 --- !u!1 &4590910002511898272
 GameObject:
   m_ObjectHideFlags: 0

@@ -1,58 +1,64 @@
 using Scripts.Scenes;
 using UnityEngine;
 
-public class PauseGame : MonoBehaviour
+namespace Scripts.Scenes
 {
-    [SerializeField] private GameObject pauseMenu;
-    // Start is called before the first frame update
-
-    private bool Paused;
-
-    private void Start()
+    public class PauseGame : MonoBehaviour
     {
-        LockCursor();
-    }
-
-    private void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.Escape))
+        [SerializeField] private GameObject pauseMenu;
+        [SerializeField] private GameObject spaceShip;
+        private bool Paused;
+        private void Start()
         {
-            if (Paused)
+            CursorVisible(false);
+            
+        }
+    
+        private void Update()
+        {
+            if (spaceShip == null) return;
+                
+            
+           //one escape pause
+            if (Input.GetKeyDown(KeyCode.Escape))
             {
-                Time.timeScale = 1.0f;
-                pauseMenu.gameObject.SetActive(false);
-                LockCursor();
-                Paused = false;
-            }
-            else
-            {
-                Time.timeScale = 0.0f;
-                pauseMenu.gameObject.SetActive(true);
-                Paused = true;
+                if (Paused==true)
+                {
+                    Time.timeScale = 1.0f;
+                    pauseMenu.gameObject.SetActive(false);
+                    CursorVisible(false);
+                    Paused = false;
+                }
+                else if(Paused==false)
+                {
+                    Time.timeScale = 0.0f;
+                    pauseMenu.gameObject.SetActive(true);
+                    CursorVisible(true);
+                    Paused = true;
+                }
+             
             }
         }
-    }
-
-    private static void LockCursor()
-    {
-        Cursor.lockState = CursorLockMode.Confined;
-        Cursor.visible = false;
-    }
-
-    public void Resume()
-    {
-        Time.timeScale = 1.0f;
-        pauseMenu.gameObject.SetActive(false);
-    }
-
-    public void ChangeSceneAfterPause()
-    {
-        Time.timeScale = 1.0f;
-        SceneChanger.ChangeScene("MainMenu");
-    }
-
-    public void QuitGame() //radit ce samo kad se builda game
-    {
-        Application.Quit();
+    
+        private  void CursorVisible(bool locked)//visibiliti of cursor
+        {
+            Cursor.lockState = CursorLockMode.Confined;
+            Cursor.visible =locked;
+        }
+        public void Resume()//resume button
+        {
+            Time.timeScale = 1.0f;
+            pauseMenu.gameObject.SetActive(false);
+            CursorVisible(false);
+            Paused = false;
+        }
+    
+        public void ChangeSceneAfterPause()//Main menu button
+        {
+            Time.timeScale = 1.0f;
+            SceneChanger.ChangeScene("MainMenu");
+        }
+    
+  
     }
 }

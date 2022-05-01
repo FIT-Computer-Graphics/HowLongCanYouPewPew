@@ -1,8 +1,10 @@
 using System.Collections.Generic;
 using UnityEngine;
+using  Scripts.Enemy;
 
 namespace Scripts.Enemy
 {
+    
     public class EnemyAI : MonoBehaviour
     {
         public List<Vector3> EscapeDirections = new List<Vector3>();
