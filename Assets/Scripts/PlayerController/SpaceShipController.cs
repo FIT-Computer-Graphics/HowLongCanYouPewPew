@@ -19,7 +19,7 @@ namespace Scripts.PlayerController
             CalculateShooting();
 
             // TESTTESTTEST
-            if (Input.GetKeyDown(KeyCode.Space)) EnemySpawner.GetComponent<EnemySpawner>().SpawnEnemies(10, 50);
+            //if (Input.GetKeyDown(KeyCode.Space)) EnemySpawner.GetComponent<EnemySpawner>().SpawnEnemies(10, 50);
         }
 
         private void ToggleFiring()
