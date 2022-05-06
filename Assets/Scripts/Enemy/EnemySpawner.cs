@@ -1,6 +1,7 @@
 using System;
 using UnityEngine;
 using UnityEngine.PlayerLoop;
+using UnityEngine.UI;
 using Random = UnityEngine.Random;
 
 namespace Scripts.Enemy
@@ -11,6 +12,8 @@ namespace Scripts.Enemy
         public Transform player;
         private int amount = 1;
         private float timeLeft=5 ;
+        public Text WaveCounter;
+        private int counter=1;
         public void SpawnEnemies(int amount, float rangeAroundPlayer)
         {
             // Randomly spawn enemies around the player
@@ -25,6 +28,9 @@ namespace Scripts.Enemy
                 }
                 this.amount = this.amount + 1;
                 timeLeft = 5;
+                WaveCounter.text = $"Wave: {counter}";
+                counter++;
+                
             }
         }
 
