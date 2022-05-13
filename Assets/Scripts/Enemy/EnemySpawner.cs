@@ -13,7 +13,13 @@ namespace Scripts.Enemy
         private int amount = 1;
         private float timeLeft=5 ;
         public Text WaveCounter;
-        private int counter=1;
+        public ScoreKeeper score;
+        
+        private void Awake()
+        {
+            score = GameObject.Find("ScoreKeeper").GetComponent<ScoreKeeper>();
+        }
+        
         public void SpawnEnemies(int amount, float rangeAroundPlayer)
         {
             // Randomly spawn enemies around the player
@@ -28,8 +34,8 @@ namespace Scripts.Enemy
                 }
                 this.amount = this.amount + 1;
                 timeLeft = 5;
-                WaveCounter.text = $"Wave: {counter}";
-                counter++;
+                
+                score.currentWave += 1;
                 
             }
         }

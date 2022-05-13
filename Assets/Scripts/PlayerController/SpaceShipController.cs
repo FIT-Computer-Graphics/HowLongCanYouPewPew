@@ -78,14 +78,13 @@ namespace Scripts.PlayerController
 
         private void HandleDamage(RaycastHit raycastHit)
         {
-            Debug.Log($"Hit {raycastHit.transform.gameObject.tag}");
             switch (raycastHit.transform.gameObject.tag)
             {
                 case "Asteroid":
                     hitInfo.transform.GetComponent<AsteroidController>().TakeDamage();
                     break;
                 case "Enemy":
-                    // Do stuff
+                    hitInfo.transform.GetComponent<EnemyController>().TakeDamage(gunDamage);
                     break;
             }
         }
@@ -131,6 +130,8 @@ namespace Scripts.PlayerController
         // TESTTESTTEST
         public GameObject EnemySpawner;
         
+        // Damage
+        public int gunDamage = 10;
         // Sounds
         public AudioSource ShipAudioSource;
         public AudioClip ShootSound;
