@@ -1,6 +1,9 @@
+using System;
 using Scripts.Enemy;
 using Scripts.Asteroids;
 using UnityEngine;
+using UnityEngine.UI;
+using Random = UnityEngine.Random;
 
 namespace Scripts.PlayerController
 {
@@ -10,16 +13,50 @@ namespace Scripts.PlayerController
         {
             screenCenter.x = Screen.width * .5f;
             screenCenter.y = Screen.height * .5f;
+            maxHealth = playerHealth;
+            SetHealthBar();
         }
 
         private void Update()
         {
             CalculateMovement();
             ToggleFiring();
+            SetHealthBar();
             CalculateShooting();
+            TestRegen();
+            SetHealthBarVisibility();
 
             // TESTTESTTEST
             //if (Input.GetKeyDown(KeyCode.Space)) EnemySpawner.GetComponent<EnemySpawner>().SpawnEnemies(10, 50);
+        }
+
+        private void SetHealthBarVisibility()
+        {
+            if (Math.Abs(healthBar.value - 1f) < 0.2f)
+            {
+                if (healthBarTimer == 0) healthBarTimer = Time.time;
+                if (Time.time - healthBarTimer > 5)
+                {
+                    healthBar.gameObject.SetActive(false);
+                }
+                
+            }
+            else
+            {
+                healthBarTimer = 0;
+                if (!healthBar.IsActive()) healthBar.gameObject.SetActive(true);
+            }
+
+
+        }
+
+        private void TestRegen()
+        {
+            // regen if last damage was more than 10 seconds ago
+            isRegenerating = Time.time - lastDamageTime > 5;
+            if (!isRegenerating || !(playerHealth < maxHealth)) return;
+            playerHealth += Time.deltaTime * 0.50f * playerHealth;
+            if (playerHealth > maxHealth) playerHealth = maxHealth;
         }
 
         private void ToggleFiring()
@@ -127,11 +164,9 @@ namespace Scripts.PlayerController
 
         #region Variables
 
-        // TESTTESTTEST
-        public GameObject EnemySpawner;
-        
         // Damage
         public int gunDamage = 10;
+        
         // Sounds
         public AudioSource ShipAudioSource;
         public AudioClip ShootSound;
@@ -162,7 +197,30 @@ namespace Scripts.PlayerController
         private float accumulatedTime;
         private Ray ray;
         private RaycastHit hitInfo;
+        
+        [SerializeField] private Slider healthBar;
+        // Player Health
+        
+        [SerializeField] private float playerHealth;
+        private float maxHealth;
+        private bool isRegenerating;
+        private float lastDamageTime;
+        private float healthBarTimer;
 
         #endregion
+        
+        private void SetHealthBar()
+        {
+            healthBar.value = playerHealth / maxHealth;
+        }
+
+        public void TakeDamage(int damage)
+        {
+            lastDamageTime = Time.time;
+            playerHealth -= damage;
+            if (!(playerHealth <= 0)) return;
+            var playerDestruction = GetComponent<PlayerDestruction>();
+            playerDestruction.Die();
+        }
     }
 }

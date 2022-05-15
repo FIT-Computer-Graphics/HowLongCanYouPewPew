@@ -1,6 +1,9 @@
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using  Scripts.Enemy;
+using Scripts.PlayerController;
+using UnityEngine.UI;
 
 namespace Scripts.Enemy
 {
@@ -29,12 +32,120 @@ namespace Scripts.Enemy
 
         private Vector3 storeTarget;
         private Transform target;
-
+        
+        // Shooting
+        
+        public ParticleSystem[] muzzleFlashes;
+        public Transform[] raycastOrigin;
+        public ParticleSystem hitEffect;
+        public TrailRenderer[] tracerEffects;
+        
+        public int fireRate = 10;
+        private float accumulatedTime;
+        private Ray ray;
+        private RaycastHit hitInfo;
+        private SpaceShipController player;
+        
+        // Sound
+        
+        public AudioSource ShipAudioSource;
+        public AudioClip ShootSound;
+        private int bulletsFired = 0;
+        [SerializeField] private int enemyDamage = 8;
+        
         private void Start()
         {
             target = GameObject.FindGameObjectWithTag("Player").transform;
             myTransform = transform;
+            player = GameObject.FindGameObjectWithTag("Player").GetComponent<SpaceShipController>();
+            StartCoroutine(HeatDissipate());
         }
+        
+         private void CalculateShooting()
+        {
+            if (bulletsFired >= fireRate) return;
+            
+            accumulatedTime += Time.deltaTime;
+            if (accumulatedTime < 1.0f / fireRate) return;
+            accumulatedTime = 0;
+
+            FireBullet();
+        }
+
+         private IEnumerator HeatDissipate()
+         {
+             while (true)
+             {
+                 yield return new WaitForSeconds(1f);
+                 if (bulletsFired > 0)
+                 {
+                     bulletsFired--;
+                 }
+             }
+         }
+         
+        private void FireBullet()
+        {
+            bulletsFired++;
+            // look at player with a random inaccuracy
+
+            gameObject.transform.LookAt(target.transform.position + new Vector3(Random.Range(-2f, 2f), Random.Range(-2f, 2f), Random.Range(-2f, 2f)));
+            // Muzzle Flash Stuff
+            foreach (var particle in muzzleFlashes) particle.Emit(1);
+
+            // Pew Pew
+            foreach (var origin in raycastOrigin)
+            {
+                ray.origin = origin.position;
+                ray.direction = origin.forward;
+
+                // If it hits, make the laser go there
+                if (Physics.Raycast(ray, out hitInfo, 100f))
+                {
+                    var transform1 = hitEffect.transform;
+                    transform1.position = hitInfo.point;
+                    transform1.forward = hitInfo.normal;
+                    hitEffect.Emit(1);
+
+                    SpawnTracers();
+                    HandleDamage(hitInfo);
+                }
+                // If it doesn't, just make it go forward I guess idk
+                else
+                {
+                    SpawnTracers(true);
+                }
+            }
+
+            // Play the sound
+            // Play the sound
+            ShipAudioSource.pitch = Random.Range(0.7f, 0.95f);
+            ShipAudioSource.PlayOneShot(ShootSound);
+            ShipAudioSource.pitch = Random.Range(0.7f, 0.95f);
+            ShipAudioSource.PlayOneShot(ShootSound);
+        }
+
+        private void HandleDamage(RaycastHit raycastHit)
+        {
+            switch (raycastHit.transform.gameObject.tag)
+            {
+                case "Player":
+                    player.TakeDamage(enemyDamage);
+                    break;
+            }
+        }
+
+        private void SpawnTracers(bool infinite = false)
+        {
+            foreach (var tracerEffect in tracerEffects)
+            {
+                var tracer = Instantiate(tracerEffect, ray.origin, Quaternion.identity);
+                tracer.AddPosition(ray.origin);
+                if (infinite) tracer.AddPosition(ray.GetPoint(100f));
+                else tracer.transform.position = hitInfo.point;
+            }
+        }
+
 
         private void FixedUpdate()
         {
@@ -55,9 +166,9 @@ namespace Scripts.Enemy
                 if (distance > maxDist) chasing = false;
 
                 //Attack if close enough
-                if (distance < fireDist)
+                if (distance < fireDist && distance > minDist)
                 {
-                    
+                    CalculateShooting();
                 }
 
                 if (distance < minDist)
@@ -76,7 +187,7 @@ namespace Scripts.Enemy
 
             ObstacleAvoidance(transform.forward, 0);
         }
-
+        
         private void ObstacleAvoidance(Vector3 direction, float offsetX)
         {
             var hit = Rays(direction, offsetX);
@@ -190,6 +301,7 @@ namespace Scripts.Enemy
             Debug.DrawRay(position + new Vector3(offsetX, 0, 0), direction * (10 * moveSpeed), Color.red);
 
             var distanceToLookAhead = moveSpeed * 5;
+            
             //Adjust 5 to proper radius around object to pick up raycast hits
             var results = new RaycastHit[] { };
             Physics.SphereCastNonAlloc(ray, 5, results, distanceToLookAhead);

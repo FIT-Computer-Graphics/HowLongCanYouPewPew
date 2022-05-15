@@ -22,6 +22,7 @@ namespace Scripts.World
         // Start is called before the first frame update
         private void Start()
         {
+            var asteroid = GameObject.FindGameObjectsWithTag("Asteroid");
             SpawnAsteroids();
         }
 

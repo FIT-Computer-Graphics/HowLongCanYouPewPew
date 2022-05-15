@@ -12,7 +12,6 @@ GameObject:
   - component: {fileID: 1687204134127364299}
   - component: {fileID: 1679373573062880581}
   - component: {fileID: 1665471197783955727}
-  - component: {fileID: 1665471197783955720}
   - component: {fileID: 1665471197783955726}
   m_Layer: 0
   m_Name: Asteroid Lava Red
@@ -32,6 +31,7 @@ Transform:
     w: 1}
   m_LocalPosition: {x: -9.3, y: -0, z: 9.7}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1662444765779522241}
   m_Father: {fileID: 0}
@@ -56,6 +56,7 @@ MeshRenderer:
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
+  m_StaticShadowCaster: 0
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
@@ -102,21 +103,6 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
---- !u!114 &1665471197783955720
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1664792902450554373}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 62b5d5e9f5e7efc4e9f94c014dbb7da5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  spaceShip: {fileID: 0}
-  Player: {fileID: 0}
-  Effect: {fileID: 1121192042590650, guid: e1b08032bec16ba4eb1ae23cbd572664, type: 3}
 --- !u!114 &1665471197783955726
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -133,6 +119,7 @@ MonoBehaviour:
   damagePerShot: 30
   explosionEffect: {fileID: 198917022394846920, guid: e1b08032bec16ba4eb1ae23cbd572664,
     type: 3}
+  explosionSounds: []
 --- !u!1 &1666167147276331185
 GameObject:
   m_ObjectHideFlags: 0
@@ -161,6 +148,7 @@ Transform:
     w: 1}
   m_LocalPosition: {x: 0, y: 0.16, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1661069389167265153}
   m_RootOrder: 0

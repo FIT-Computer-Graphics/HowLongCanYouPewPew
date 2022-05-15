@@ -10,9 +10,8 @@ namespace Scripts.Enemy
     {
         public GameObject enemy;
         public Transform player;
-        private int amount = 1;
+        private int amount = 50;
         private float timeLeft=5 ;
-        public Text WaveCounter;
         public ScoreKeeper score;
         
         private void Awake()
@@ -25,6 +24,12 @@ namespace Scripts.Enemy
             // Randomly spawn enemies around the player
             if (Timer()<0)
             {
+                // range can be -rangeAroundPlayer to +rangeAroundPlayer but not between -10 and 10
+                var randomRange = Random.Range(-rangeAroundPlayer, rangeAroundPlayer);
+                if (randomRange is > -10 and < 10)
+                {
+                    randomRange += rangeAroundPlayer;
+                }
                 for (var i = 0; i < amount; i++)
                 {
                     var position = player.position;
@@ -50,7 +55,7 @@ namespace Scripts.Enemy
         {
             if (GameObject.FindGameObjectWithTag(enemy.tag)==null)
             {
-                SpawnEnemies(amount,10);
+                SpawnEnemies(amount,40);
             }
         }
     }

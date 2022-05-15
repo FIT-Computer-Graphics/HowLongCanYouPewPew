@@ -7,7 +7,7 @@ namespace Scripts.Scenes
     {
         [SerializeField] private GameObject pauseMenu;
         [SerializeField] private GameObject spaceShip;
-        private bool Paused;
+        private bool paused;
         private void Start()
         {
             CursorVisible(false);
@@ -20,27 +20,25 @@ namespace Scripts.Scenes
                 
             
            //one escape pause
-            if (Input.GetKeyDown(KeyCode.Escape))
-            {
-                if (Paused==true)
-                {
-                    Time.timeScale = 1.0f;
-                    pauseMenu.gameObject.SetActive(false);
-                    CursorVisible(false);
-                    Paused = false;
-                }
-                else if(Paused==false)
-                {
-                    Time.timeScale = 0.0f;
-                    pauseMenu.gameObject.SetActive(true);
-                    CursorVisible(true);
-                    Paused = true;
-                }
-             
-            }
+           if (!Input.GetKeyDown(KeyCode.Escape)) return;
+           switch (paused)
+           {
+               case true:
+                   Time.timeScale = 1.0f;
+                   pauseMenu.gameObject.SetActive(false);
+                   CursorVisible(false);
+                   paused = false;
+                   break;
+               case false:
+                   Time.timeScale = 0.0f;
+                   pauseMenu.gameObject.SetActive(true);
+                   CursorVisible(true);
+                   paused = true;
+                   break;
+           }
         }
     
-        private  void CursorVisible(bool locked)//visibiliti of cursor
+        private static void CursorVisible(bool locked) //visibility of cursor
         {
             Cursor.lockState = CursorLockMode.Confined;
             Cursor.visible =locked;
@@ -50,7 +48,7 @@ namespace Scripts.Scenes
             Time.timeScale = 1.0f;
             pauseMenu.gameObject.SetActive(false);
             CursorVisible(false);
-            Paused = false;
+            paused = false;
         }
     
         public void ChangeSceneAfterPause()//Main menu button

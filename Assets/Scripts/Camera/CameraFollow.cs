@@ -9,17 +9,19 @@ namespace Scripts.Camera
         public Transform TPP;
         public Transform FPP;
         public Transform spaceship;
+        public bool firstperson;
         
         private void Update()
         {
+            if (Input.GetKeyDown(KeyCode.F)) firstperson = !firstperson;
             
-            if (spaceship!=null&&!Input.GetKey(KeyCode.V))
+            if (spaceship!=null&&!firstperson)
             {
                 transform.position = TPP.position;
                 transform.LookAt(spaceship.transform);
                 transform.SetParent(null);
             }
-            if (Input.GetKey(KeyCode.V)&&spaceship!=null)
+            if (firstperson&&spaceship!=null)
             {
                 transform.position = FPP.position;
                 transform.SetParent(FPP);

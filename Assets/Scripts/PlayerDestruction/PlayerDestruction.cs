@@ -14,33 +14,41 @@ public class PlayerDestruction : MonoBehaviour
     private GameObject effect;
 
     private float timeRemaining = 3f;
+    public AudioClip[] explosionSounds;
 
     public GameObject ScoreBoard;
     public GameObject spaceShip;
+    private bool isDead;
     private void Update()
     {
-        if (spaceShip)
-        {
-            return;
-        }
-        player.GetComponent<SpaceShipController>().enabled=false;
-        if (timeRemaining > 0) timeRemaining -= Time.deltaTime;
-        else
-        {
-            ScoreBoard.SetActive(true);
-        }
+        if (spaceShip) return;
 
-           
+        player.GetComponent<SpaceShipController>().enabled = false;
+        if (timeRemaining > 0) timeRemaining -= Time.deltaTime;
+        else ScoreBoard.SetActive(true);
     }
 
-    private void OnCollisionEnter(Collision collision)
+    private void OnCollisionEnter(Collision collision) => Die();
+    public void Die()
     {
-           
-       // if (collision.gameObject != Asteroid) return;
-        Destroy(spaceShip);
+        if (isDead) return;
+        isDead = true;
+        
         var explosion = Instantiate(effect, player.transform.position, Quaternion.identity);
+        PlayAudio();
+        Destroy(spaceShip);
         Destroy(explosion, 1.5f);
         Cursor.visible = true;
+    }
     
+    private void PlayAudio()
+    {
+        var audioSource =
+            Instantiate(new GameObject().AddComponent<AudioSource>(), transform.position, Quaternion.identity);
+        audioSource.spatialBlend = 1;
+        audioSource.volume = 1;
+        audioSource.spread = 360;
+        audioSource.PlayOneShot(explosionSounds[Random.Range(0, explosionSounds.Length)]);
+        Destroy(audioSource.gameObject, 5f);
     }
 }

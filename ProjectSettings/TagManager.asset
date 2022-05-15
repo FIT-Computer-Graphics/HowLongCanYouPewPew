@@ -8,6 +8,7 @@ TagManager:
   - Pause
   - Asteroid
   - Enemy
+  - Canvas
   layers:
   - Default
   - TransparentFX
