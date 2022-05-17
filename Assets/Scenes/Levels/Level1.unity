@@ -2173,6 +2173,7 @@ MonoBehaviour:
   enemies:
   - {fileID: 4286406212563760086, guid: 42b8ec7f6f85e37428feec3b20e4f637, type: 3}
   - {fileID: 4286406212563760086, guid: bff9266d33c49d34eb0b70e0b89163a1, type: 3}
+  - {fileID: 4286406212563760086, guid: ed775213d80ce064f8be39463b8de968, type: 3}
   player: {fileID: 1102536789}
   score: {fileID: 1501548585}
   amount: 10

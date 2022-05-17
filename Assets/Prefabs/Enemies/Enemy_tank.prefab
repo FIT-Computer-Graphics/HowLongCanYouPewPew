@@ -249,7 +249,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: d58bf68b17f9a4240aaeb5c200c9a12c, type: 2}
+  - {fileID: 2100000, guid: 8b52c4a2cbd2a8248b7c6e782e73497e, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -340,6 +340,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   health: 300
+  maxHealth: 0
   scoreValue: 3
   score: {fileID: 0}
   explosionEffect: {fileID: 198917022394846920, guid: e1b08032bec16ba4eb1ae23cbd572664,
@@ -348,6 +349,8 @@ MonoBehaviour:
   - {fileID: 8300000, guid: 1b53bbeef4a24c345bf84ecac9dc1be6, type: 3}
   - {fileID: 8300000, guid: 223b03a1a336937418ab47f2d199d382, type: 3}
   enemyMarker: {fileID: 8898189860924588240, guid: f2e804f0fcfac3e469b73ea048a4cdec,
+    type: 3}
+  healthBar: {fileID: 5785055324033748793, guid: 61450fe8ae9edfc48bd6b86600b19535,
     type: 3}
 --- !u!54 &-3178933489486062482
 Rigidbody:
