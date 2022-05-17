@@ -1,5 +1,4 @@
 using System;
-using Scripts.Enemy;
 using Scripts.Asteroids;
 using UnityEngine;
 using UnityEngine.UI;
@@ -35,19 +34,13 @@ namespace Scripts.PlayerController
             if (Math.Abs(healthBar.value - 1f) < 0.2f)
             {
                 if (healthBarTimer == 0) healthBarTimer = Time.time;
-                if (Time.time - healthBarTimer > 5)
-                {
-                    healthBar.gameObject.SetActive(false);
-                }
-                
+                if (Time.time - healthBarTimer > 5) healthBar.gameObject.SetActive(false);
             }
             else
             {
                 healthBarTimer = 0;
                 if (!healthBar.IsActive()) healthBar.gameObject.SetActive(true);
             }
-
-
         }
 
         private void TestRegen()
@@ -162,11 +155,25 @@ namespace Scripts.PlayerController
                                    activeHoverSpeed * Time.deltaTime * transform1.up;
         }
 
+        private void SetHealthBar()
+        {
+            healthBar.value = playerHealth / maxHealth;
+        }
+
+        public void TakeDamage(int damage)
+        {
+            lastDamageTime = Time.time;
+            playerHealth -= damage;
+            if (!(playerHealth <= 0)) return;
+            var playerDestruction = GetComponent<PlayerDestruction>();
+            playerDestruction.Die();
+        }
+
         #region Variables
 
         // Damage
         public int gunDamage = 10;
-        
+
         // Sounds
         public AudioSource ShipAudioSource;
         public AudioClip ShootSound;
@@ -197,10 +204,10 @@ namespace Scripts.PlayerController
         private float accumulatedTime;
         private Ray ray;
         private RaycastHit hitInfo;
-        
+
         [SerializeField] private Slider healthBar;
         // Player Health
-        
+
         [SerializeField] private float playerHealth;
         private float maxHealth;
         private bool isRegenerating;
@@ -208,19 +215,5 @@ namespace Scripts.PlayerController
         private float healthBarTimer;
 
         #endregion
-        
-        private void SetHealthBar()
-        {
-            healthBar.value = playerHealth / maxHealth;
-        }
-
-        public void TakeDamage(int damage)
-        {
-            lastDamageTime = Time.time;
-            playerHealth -= damage;
-            if (!(playerHealth <= 0)) return;
-            var playerDestruction = GetComponent<PlayerDestruction>();
-            playerDestruction.Die();
-        }
     }
 }

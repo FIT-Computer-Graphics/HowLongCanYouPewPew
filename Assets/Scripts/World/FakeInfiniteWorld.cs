@@ -1,4 +1,3 @@
-using System;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.Rendering.PostProcessing;
@@ -8,13 +7,13 @@ namespace Scripts.World
     public class FakeInfiniteWorld : MonoBehaviour
     {
         [SerializeField] private Transform player;
-        private AsteroidGenerator asteroidGenerator;
-        private float mapSize;
         public GameObject PostProcessing;
-        private PostProcessVolume profile;
-        private LensDistortion lensDistortion;
+        private AsteroidGenerator asteroidGenerator;
         private ChromaticAberration chromaticAberration;
-        
+        private LensDistortion lensDistortion;
+        private float mapSize;
+        private PostProcessVolume profile;
+
         private void Awake()
         {
             asteroidGenerator = GetComponentInChildren<AsteroidGenerator>();
@@ -24,8 +23,12 @@ namespace Scripts.World
             lensDistortion = profile.profile.GetSetting<LensDistortion>();
             chromaticAberration = profile.profile.GetSetting<ChromaticAberration>();
         }
-        private void Update() => MoveToOtherEdge();
-        
+
+        private void Update()
+        {
+            MoveToOtherEdge();
+        }
+
         // Yes, we're cheating.
         private void MoveToOtherEdge()
         {
@@ -36,10 +39,7 @@ namespace Scripts.World
                 player.position.z > mapSize ? -mapSize : player.position.z < -mapSize ? mapSize : player.position.z
             );
             // if player moved more than 50 units
-            if (Vector3.Distance(currentPosition, player.position) > 200f)
-            {
-                StartCoroutine(DoPostProcessing());
-            }
+            if (Vector3.Distance(currentPosition, player.position) > 200f) StartCoroutine(DoPostProcessing());
         }
 
         private IEnumerator DoPostProcessing()
@@ -54,6 +54,7 @@ namespace Scripts.World
                 lensDistortion.intensity.value = Mathf.Lerp(LDintensity, -50f, (Time.time - startTime) / duration);
                 yield return null;
             }
+
             yield return new WaitForSeconds(0.1f);
             startTime = Time.time;
             duration = 0.7f;
@@ -64,6 +65,5 @@ namespace Scripts.World
                 yield return null;
             }
         }
-
     }
 }

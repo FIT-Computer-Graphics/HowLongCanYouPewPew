@@ -1,4 +1,3 @@
-
 using Scripts.PlayerController;
 using UnityEngine;
 using UnityEngine.Serialization;
@@ -13,12 +12,14 @@ public class PlayerDestruction : MonoBehaviour
     [FormerlySerializedAs("Effect")] [SerializeField]
     private GameObject effect;
 
-    private float timeRemaining = 3f;
     public AudioClip[] explosionSounds;
 
     public GameObject ScoreBoard;
     public GameObject spaceShip;
     private bool isDead;
+
+    private float timeRemaining = 3f;
+
     private void Update()
     {
         if (spaceShip) return;
@@ -28,19 +29,23 @@ public class PlayerDestruction : MonoBehaviour
         else ScoreBoard.SetActive(true);
     }
 
-    private void OnCollisionEnter(Collision collision) => Die();
+    private void OnCollisionEnter(Collision collision)
+    {
+        Die();
+    }
+
     public void Die()
     {
         if (isDead) return;
         isDead = true;
-        
+
         var explosion = Instantiate(effect, player.transform.position, Quaternion.identity);
         PlayAudio();
         Destroy(spaceShip);
         Destroy(explosion, 1.5f);
         Cursor.visible = true;
     }
-    
+
     private void PlayAudio()
     {
         var audioSource =

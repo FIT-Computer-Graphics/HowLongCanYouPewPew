@@ -1,7 +1,5 @@
-using System;
 using System.Collections.Generic;
 using UnityEngine;
-using Random = UnityEngine.Random;
 
 namespace Scripts.World
 {
@@ -16,7 +14,7 @@ namespace Scripts.World
         [SerializeField] private bool randomizeRotations;
         [SerializeField] private float randomFloatingSpeed;
 
-        private readonly List<GameObject> objectsToPlace = new List<GameObject>();
+        private readonly List<GameObject> objectsToPlace = new();
         private Vector3 spawnPoint;
 
         // Start is called before the first frame update

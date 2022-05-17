@@ -1,6 +1,4 @@
 using UnityEngine;
-using System;
-using Random = UnityEngine.Random;
 
 namespace Scripts.Asteroids
 {
@@ -19,7 +17,6 @@ namespace Scripts.Asteroids
             health -= damagePerShot;
             if (health > 0) return;
             Die();
-
         }
 
         private void Die()

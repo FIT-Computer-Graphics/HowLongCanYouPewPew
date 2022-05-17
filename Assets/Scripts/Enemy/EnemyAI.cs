@@ -1,16 +1,13 @@
 using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
-using  Scripts.Enemy;
 using Scripts.PlayerController;
-using UnityEngine.UI;
+using UnityEngine;
 
 namespace Scripts.Enemy
 {
-    
     public class EnemyAI : MonoBehaviour
     {
-        public List<Vector3> EscapeDirections = new List<Vector3>();
+        public List<Vector3> EscapeDirections = new();
 
         //AI Checks
         public bool chasing;
@@ -24,35 +21,35 @@ namespace Scripts.Enemy
 
         //AI Speeds
         public float moveSpeed;
-        private Transform myTransform;
-        private Vector3 newTargetPos;
-        private Transform obstacle;
-        private bool overrideTarget;
-        private bool savePos;
 
-        private Vector3 storeTarget;
-        private Transform target;
-        
         // Shooting
-        
+
         public ParticleSystem[] muzzleFlashes;
         public Transform[] raycastOrigin;
         public ParticleSystem hitEffect;
         public TrailRenderer[] tracerEffects;
-        
+        public float fireRandomness = 2f;
         public int fireRate = 10;
-        private float accumulatedTime;
-        private Ray ray;
-        private RaycastHit hitInfo;
-        private SpaceShipController player;
-        
+
         // Sound
-        
+
         public AudioSource ShipAudioSource;
         public AudioClip ShootSound;
-        private int bulletsFired = 0;
         [SerializeField] private int enemyDamage = 8;
-        
+        private float accumulatedTime;
+        private int bulletsFired;
+        private RaycastHit hitInfo;
+        private Transform myTransform;
+        private Vector3 newTargetPos;
+        private Transform obstacle;
+        private bool overrideTarget;
+        private SpaceShipController player;
+        private Ray ray;
+        private bool savePos;
+
+        private Vector3 storeTarget;
+        private Transform target;
+
         private void Start()
         {
             target = GameObject.FindGameObjectWithTag("Player").transform;
@@ -60,11 +57,50 @@ namespace Scripts.Enemy
             player = GameObject.FindGameObjectWithTag("Player").GetComponent<SpaceShipController>();
             StartCoroutine(HeatDissipate());
         }
-        
-         private void CalculateShooting()
+
+
+        private void FixedUpdate()
+        {
+            //Find Distance to target
+            var distance = (target.position - myTransform.position).magnitude;
+
+            if (chasing)
+            {
+                //Rotate to look at player
+                var position1 = myTransform.position;
+                myTransform.rotation = Quaternion.Slerp(myTransform.rotation,
+                    Quaternion.LookRotation(target.position - position1), rotationSpeed * Time.deltaTime);
+                //Move towards the player
+                position1 += myTransform.forward * (moveSpeed * Time.deltaTime);
+                myTransform.position = position1;
+
+                //Moves too far away from player
+                if (distance > maxDist) chasing = false;
+
+                //Attack if close enough
+                if (distance < fireDist && distance > minDist) CalculateShooting();
+
+                if (distance < minDist)
+                {
+                    var position = myTransform.position;
+                    myTransform.rotation = Quaternion.Slerp(myTransform.rotation,
+                        Quaternion.LookRotation(position - target.position), rotationSpeed * Time.deltaTime);
+                    position += myTransform.forward * (moveSpeed * Time.deltaTime);
+                    myTransform.position = position;
+                }
+            }
+            else
+            {
+                if (distance < maxDist) chasing = true;
+            }
+
+            ObstacleAvoidance(transform.forward, 0);
+        }
+
+        private void CalculateShooting()
         {
             if (bulletsFired >= fireRate) return;
-            
+
             accumulatedTime += Time.deltaTime;
             if (accumulatedTime < 1.0f / fireRate) return;
             accumulatedTime = 0;
@@ -72,24 +108,23 @@ namespace Scripts.Enemy
             FireBullet();
         }
 
-         private IEnumerator HeatDissipate()
-         {
-             while (true)
-             {
-                 yield return new WaitForSeconds(1f);
-                 if (bulletsFired > 0)
-                 {
-                     bulletsFired--;
-                 }
-             }
-         }
-         
+        private IEnumerator HeatDissipate()
+        {
+            while (true)
+            {
+                yield return new WaitForSeconds(1f);
+                if (bulletsFired > 0) bulletsFired--;
+            }
+        }
+
         private void FireBullet()
         {
             bulletsFired++;
             // look at player with a random inaccuracy
 
-            gameObject.transform.LookAt(target.transform.position + new Vector3(Random.Range(-2f, 2f), Random.Range(-2f, 2f), Random.Range(-2f, 2f)));
+            gameObject.transform.LookAt(target.transform.position +
+                                        new Vector3(Random.Range(-fireRandomness, fireRandomness), Random.Range(-fireRandomness, fireRandomness),
+                                            Random.Range(-fireRandomness, fireRandomness)));
             // Muzzle Flash Stuff
             foreach (var particle in muzzleFlashes) particle.Emit(1);
 
@@ -146,48 +181,6 @@ namespace Scripts.Enemy
             }
         }
 
-
-        private void FixedUpdate()
-        {
-            //Find Distance to target
-            var distance = (target.position - myTransform.position).magnitude;
-
-            if (chasing)
-            {
-                //Rotate to look at player
-                var position1 = myTransform.position;
-                myTransform.rotation = Quaternion.Slerp(myTransform.rotation,
-                    Quaternion.LookRotation(target.position - position1), rotationSpeed * Time.deltaTime);
-                //Move towards the player
-                position1 += myTransform.forward * (moveSpeed * Time.deltaTime);
-                myTransform.position = position1;
-
-                //Moves too far away from player
-                if (distance > maxDist) chasing = false;
-
-                //Attack if close enough
-                if (distance < fireDist && distance > minDist)
-                {
-                    CalculateShooting();
-                }
-
-                if (distance < minDist)
-                {
-                    var position = myTransform.position;
-                    myTransform.rotation = Quaternion.Slerp(myTransform.rotation,
-                        Quaternion.LookRotation(position - target.position), rotationSpeed * Time.deltaTime);
-                    position += myTransform.forward * (moveSpeed * Time.deltaTime);
-                    myTransform.position = position;
-                }
-            }
-            else
-            {
-                if (distance < maxDist) chasing = true;
-            }
-
-            ObstacleAvoidance(transform.forward, 0);
-        }
-        
         private void ObstacleAvoidance(Vector3 direction, float offsetX)
         {
             var hit = Rays(direction, offsetX);
@@ -301,7 +294,7 @@ namespace Scripts.Enemy
             Debug.DrawRay(position + new Vector3(offsetX, 0, 0), direction * (10 * moveSpeed), Color.red);
 
             var distanceToLookAhead = moveSpeed * 5;
-            
+
             //Adjust 5 to proper radius around object to pick up raycast hits
             var results = new RaycastHit[] { };
             Physics.SphereCastNonAlloc(ray, 5, results, distanceToLookAhead);
