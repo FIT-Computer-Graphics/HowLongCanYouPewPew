@@ -1925,6 +1925,8 @@ MonoBehaviour:
   gunDamage: 10
   ShipAudioSource: {fileID: 1976510354}
   ShootSound: {fileID: 8300000, guid: a5c42edce299c3a4abc797189cd603b2, type: 3}
+  PlayerSound: {fileID: 8300000, guid: aa3a03872ddeef1418d612c817b6bfc4, type: 3}
+  PlayerStoppingSound: {fileID: 0}
   forwardSpeed: 25
   hoverSpeed: 5
   lookRateSpeed: 90
@@ -2157,7 +2159,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &1335261863
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2993,8 +2995,8 @@ AudioSource:
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 0}
-  m_PlayOnAwake: 1
-  m_Volume: 0.595
+  m_PlayOnAwake: 0
+  m_Volume: 0.44
   m_Pitch: 1
   Loop: 0
   Mute: 0
@@ -3002,7 +3004,7 @@ AudioSource:
   SpatializePostEffects: 0
   Priority: 128
   DopplerLevel: 1
-  MinDistance: 1
+  MinDistance: 12
   MaxDistance: 500
   Pan2D: 0
   rolloffMode: 0

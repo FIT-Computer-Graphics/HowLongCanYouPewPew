@@ -24,11 +24,19 @@ namespace Scripts.PlayerController
             CalculateShooting();
             TestRegen();
             SetHealthBarVisibility();
-
+           SetAudioOnMoving();
             // TESTTESTTEST
             //if (Input.GetKeyDown(KeyCode.Space)) EnemySpawner.GetComponent<EnemySpawner>().SpawnEnemies(10, 50);
         }
 
+        private void SetAudioOnMoving()
+        {
+            if (Input.GetKeyDown(KeyCode.W)&&Time.deltaTime!=0) 
+            {
+                ShipAudioSource.PlayOneShot(PlayerSound);
+            }
+          
+        }
         private void SetHealthBarVisibility()
         {
             if (Math.Abs(healthBar.value - 1f) < 0.2f)
@@ -177,6 +185,8 @@ namespace Scripts.PlayerController
         // Sounds
         public AudioSource ShipAudioSource;
         public AudioClip ShootSound;
+        public AudioClip PlayerSound;
+        public AudioClip PlayerStoppingSound;
 
         // Movement
         [SerializeField] private float forwardSpeed;
