@@ -1,3 +1,4 @@
+using Scripts.Enemy;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -5,27 +6,42 @@ public class EnemyController : MonoBehaviour
 {
     // Start is called before the first frame update
     public int health;
+    public int maxHealth;
     public int scoreValue = 1;
     public ScoreKeeper score;
     public ParticleSystem explosionEffect;
     public AudioClip[] explosionSounds;
     public Image enemyMarker;
+    public Slider healthBar;
     private Camera mainCam;
 
     private void Awake()
     {
         score = GameObject.Find("ScoreKeeper").GetComponent<ScoreKeeper>();
         mainCam = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<Camera>();
+        maxHealth = health;
         var canvas = GameObject.FindGameObjectWithTag("Canvas").transform;
-        // enemy marker as child of canvas
         enemyMarker = Instantiate(enemyMarker, canvas);
         enemyMarker.transform.SetParent(canvas);
+        healthBar = Instantiate(healthBar, canvas);
+        healthBar.transform.SetParent(canvas);
     }
 
     private void Update()
     {
         // Display an enemyMarker for each enemy.
         CalculateMarker();
+        CalculateHealthBar();
+    }
+
+    private void CalculateHealthBar()
+    {
+        // Make a slider for health bar from 0 to 1 in percentage of health vs max health.
+        healthBar.value = (float) health / maxHealth;
+        var screenPos = mainCam.WorldToScreenPoint(gameObject.transform.position);
+        if (screenPos.z <= 0f) screenPos *= -1f;
+        healthBar.transform.position = screenPos + new Vector3(0f, -10f, 0f);
+        healthBar.transform.rotation = Quaternion.Euler(0, 0, 0);
     }
 
     private void CalculateMarker()
@@ -85,6 +101,7 @@ public class EnemyController : MonoBehaviour
         PlayAudio();
         PlayExplosionEffect();
         Destroy(enemyMarker.gameObject);
+        Destroy(healthBar.gameObject);
         Destroy(gameObject);
     }
 
