@@ -8,19 +8,19 @@ namespace Scripts.World
         [SerializeField] public float spawnRange;
         [SerializeField] private float amountToSpawn;
 
-        [SerializeField] private GameObject asteroid;
+        [SerializeField] private GameObject[] asteroids;
 
         [SerializeField] private float startSafeRange;
         [SerializeField] private bool randomizeRotations;
         [SerializeField] private float randomFloatingSpeed;
-
+        [SerializeField] private bool randomizeScales;
+        [SerializeField] private float scaleVariation;
         private readonly List<GameObject> objectsToPlace = new();
         private Vector3 spawnPoint;
 
         // Start is called before the first frame update
         private void Start()
         {
-            var asteroid = GameObject.FindGameObjectsWithTag("Asteroid");
             SpawnAsteroids();
         }
 
@@ -32,13 +32,23 @@ namespace Scripts.World
 
                 //pick new spawn point if too close to player start
                 while (Vector3.Distance(spawnPoint, Vector3.zero) < startSafeRange) PickSpawnPoint();
-
-                objectsToPlace.Add(Instantiate(asteroid, spawnPoint,
+                objectsToPlace.Add(Instantiate(asteroids[Random.Range(0, asteroids.Length)], spawnPoint,
                     Quaternion.Euler(Random.Range(0f, 360f), Random.Range(0f, 360f), Random.Range(0f, 360f))));
 
                 if (randomizeRotations)
                     objectsToPlace[i].transform.Rotate(Random.Range(0f, 360f), Random.Range(0f, 360f),
                         Random.Range(0f, 360f));
+                
+                if (randomizeScales)
+                {
+                    var xVector = Random.Range(scaleVariation/2, scaleVariation);
+                    objectsToPlace[i].transform.localScale = new Vector3(xVector,
+                        Random.Range(xVector * 0.4f, xVector * 1.6f),
+                        Random.Range(xVector * 0.4f, xVector * 1.6f));
+
+                }
+
+
                 // Make them float randomly
                 objectsToPlace[i].GetComponent<Rigidbody>().velocity = new Vector3(
                     Random.Range(-randomFloatingSpeed, randomFloatingSpeed),
@@ -49,7 +59,10 @@ namespace Scripts.World
                 objectsToPlace[i].transform.parent = transform;
             }
 
-            asteroid.SetActive(false);
+            foreach (var asteroid in asteroids)
+            {
+                asteroid.SetActive(false);
+            }
         }
 
 

@@ -1,6 +1,7 @@
 using System;
 using Scripts.Asteroids;
 using UnityEngine;
+using UnityEngine.Rendering.PostProcessing;
 using UnityEngine.UI;
 using Random = UnityEngine.Random;
 
@@ -14,6 +15,10 @@ namespace Scripts.PlayerController
             screenCenter.y = Screen.height * .5f;
             maxHealth = playerHealth;
             SetHealthBar();
+            ShipAudioSource.loop = true;
+            postProcessing = GameObject.Find("PostProcessing");
+            profile = postProcessing.GetComponent<PostProcessVolume>();
+            chromaticAberration = profile.profile.GetSetting<ChromaticAberration>();
         }
 
         private void Update()
@@ -24,22 +29,56 @@ namespace Scripts.PlayerController
             CalculateShooting();
             TestRegen();
             SetHealthBarVisibility();
-           SetAudioOnMoving();
+            SetAudioOnMoving();
+            TestWarningSound();
             // TESTTESTTEST
             //if (Input.GetKeyDown(KeyCode.Space)) EnemySpawner.GetComponent<EnemySpawner>().SpawnEnemies(10, 50);
         }
 
+        private void TestWarningSound()
+        {
+            // if health is less than 25% loop warning sound, stop if health is more than 25%
+            if (playerHealth < maxHealth * .25f && !WarningSound.isPlaying)
+            {
+                WarningSound.Play();
+            }
+            else if (playerHealth >= maxHealth * .25f && WarningSound.isPlaying)
+            {
+                WarningSound.Stop();
+            }
+            else switch (WarningSound.isPlaying)
+            {
+                case true:
+                    chromaticAberration.intensity.value += Time.deltaTime * 3;
+                    break;
+                case false:
+                    chromaticAberration.intensity.value -= Time.deltaTime * 3;
+                    break;
+            }
+        }
+
         private void SetAudioOnMoving()
         {
-            if (Input.GetKeyDown(KeyCode.W)&&Time.deltaTime!=0) 
+            // Play playersound while W is held, if released gradually fade out
+            if (Input.GetKey(KeyCode.W))
             {
-                ShipAudioSource.PlayOneShot(PlayerSound);
+                var volume = JetAudioSource.volume + Time.deltaTime * .08f;
+                JetAudioSource.volume = Mathf.Clamp(volume, 0, 0.08f);
+                if (!JetAudioSource.isPlaying) JetAudioSource.Play();
+            }
+            else
+            {
+                JetAudioSource.volume = JetAudioSource.volume - Time.deltaTime * .1f;
+                if (JetAudioSource.volume <= 0)
+                {
+                    JetAudioSource.Stop();
+                }
             }
           
         }
         private void SetHealthBarVisibility()
         {
-            if (Math.Abs(healthBar.value - 1f) < 0.2f)
+            if (Math.Abs(healthBar.value - 1f) < 0.01f)
             {
                 if (healthBarTimer == 0) healthBarTimer = Time.time;
                 if (Time.time - healthBarTimer > 5) healthBar.gameObject.SetActive(false);
@@ -179,14 +218,19 @@ namespace Scripts.PlayerController
 
         #region Variables
 
+        // VFX
+        private GameObject postProcessing;
+        private ChromaticAberration chromaticAberration;
+        private PostProcessVolume profile;
         // Damage
         public int gunDamage = 10;
 
         // Sounds
         public AudioSource ShipAudioSource;
+        public AudioSource JetAudioSource;
+        public AudioSource WarningSound;
         public AudioClip ShootSound;
         public AudioClip PlayerSound;
-        public AudioClip PlayerStoppingSound;
 
         // Movement
         [SerializeField] private float forwardSpeed;

@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 
 namespace Scripts.Enemy
@@ -27,20 +28,26 @@ namespace Scripts.Enemy
             
             // range can be -rangeAroundPlayer to +rangeAroundPlayer but not between -10 and 10
             var randomRange = Random.Range(-rangeAroundPlayer, rangeAroundPlayer);
-            if (randomRange is > -10 and < 10) randomRange += rangeAroundPlayer;
-            for (var i = 0; i < _amount; i++)
-            {
-                var position = player.position;
-                var spawnPosition = new Vector3(position.x + Random.Range(-rangeAroundPlayer, rangeAroundPlayer),
-                    position.y, position.z + Random.Range(-rangeAroundPlayer, rangeAroundPlayer));
-                // Pick a random enemy
-                Instantiate(enemies[Random.Range(0, enemies.Length)], spawnPosition, Quaternion.identity);
-            }
+            if (randomRange is > -40 and < 40) randomRange += 40;
+            StartCoroutine(SpawnThem(_amount, randomRange));
 
             amount += 1;
             timeLeft = 5;
 
             score.currentWave += 1;
+        }
+
+        private IEnumerator SpawnThem(int _amount, float randomRange)
+        {
+            for (var i = 0; i < _amount; i++)
+            {
+                var position = player.position;
+                var spawnPosition = new Vector3(position.x + randomRange,
+                    position.y - randomRange, position.z + randomRange);
+                // Pick a random enemy
+                Instantiate(enemies[Random.Range(0, enemies.Length)], spawnPosition, Quaternion.identity);
+                yield return new WaitForSeconds(0.4f);
+            }
         }
 
 
