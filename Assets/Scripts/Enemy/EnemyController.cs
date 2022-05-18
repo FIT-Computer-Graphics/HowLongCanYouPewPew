@@ -14,6 +14,7 @@ public class EnemyController : MonoBehaviour
     public Image enemyMarker;
     public Slider healthBar;
     private Camera mainCam;
+    private GameObject player;
 
     private void Awake()
     {
@@ -25,6 +26,7 @@ public class EnemyController : MonoBehaviour
         enemyMarker.transform.SetParent(canvas);
         healthBar = Instantiate(healthBar, canvas);
         healthBar.transform.SetParent(canvas);
+        player = GameObject.FindGameObjectWithTag("Player");
     }
 
     private void Update()
@@ -54,11 +56,23 @@ public class EnemyController : MonoBehaviour
             screenPos.x < 0 || screenPos.y < 0 || screenPos.x > Screen.width || screenPos.y > Screen.height
                 ? new Vector3(0.6f, 0.6f, 0.6f)
                 : new Vector3(0.3f, 0.3f, 0.3f);
+        
         var image = enemyMarker.gameObject.GetComponent<Image>();
         image.color = new Color(image.color.r, image.color.g, image.color.b,
             screenPos.x < 0 || screenPos.y < 0 || screenPos.x > Screen.width || screenPos.y > Screen.height
                 ? 0.8f
                 : 0.1f);
+
+        switch ((float) health/maxHealth)
+        {
+            // Enemies with health between 30 and 70 are yellow.
+            case > 0.3f and < 0.7f:
+                image.color = new Color(1f, 1f, 0f, image.color.a);
+                break;
+            case < 0.3f:
+                image.color = new Color(1f, 0f, 0f, image.color.a);
+                break;
+        }
 
         switch (screenPos.x)
         {

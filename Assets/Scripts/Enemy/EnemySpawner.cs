@@ -10,6 +10,7 @@ namespace Scripts.Enemy
         public ScoreKeeper score;
         public int amount = 50;
         private float timeLeft = 5;
+        public AudioSource audioSource;
 
         private void Awake()
         {
@@ -25,6 +26,7 @@ namespace Scripts.Enemy
         {
             // Randomly spawn enemies around the player
             if (!(Timer() < 0)) return;
+            audioSource.Play();
             
             // range can be -rangeAroundPlayer to +rangeAroundPlayer but not between -10 and 10
             var randomRange = Random.Range(-rangeAroundPlayer, rangeAroundPlayer);
