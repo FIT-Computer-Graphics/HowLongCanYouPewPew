@@ -31,6 +31,7 @@ namespace Scripts.PlayerController
             SetHealthBarVisibility();
             SetAudioOnMoving();
             TestWarningSound();
+            SmokeEfect();
             // TESTTESTTEST
             //if (Input.GetKeyDown(KeyCode.Space)) EnemySpawner.GetComponent<EnemySpawner>().SpawnEnemies(10, 50);
         }
@@ -68,7 +69,7 @@ namespace Scripts.PlayerController
             }
             else
             {
-                JetAudioSource.volume = JetAudioSource.volume - Time.deltaTime * .1f;
+                JetAudioSource.volume -=Time.deltaTime * .1f;
                 if (JetAudioSource.volume <= 0)
                 {
                     JetAudioSource.Stop();
@@ -195,7 +196,7 @@ namespace Scripts.PlayerController
             activeForwardSpeed = Mathf.Lerp(activeForwardSpeed, Input.GetAxis("Vertical") * forwardSpeed,
                 ForwardAcceleration * Time.deltaTime);
 
-            activeHoverSpeed = Mathf.Lerp(activeHoverSpeed, Input.GetAxis("Hover") * hoverSpeed, HoverAcceleration);
+            
 
             var transform1 = transform;
             transform1.position += activeForwardSpeed * Time.deltaTime * transform1.forward +
@@ -216,12 +217,33 @@ namespace Scripts.PlayerController
             playerDestruction.Die();
         }
 
+        public void SmokeEfect()
+        {
+          
+            if (playerHealth/maxHealth<0.5f)
+            {
+                foreach (var smoke in smokeEffect)
+                {
+                    smoke.Play();
+                    
+                }
+            }
+            else
+            {
+                foreach (var smoke in smokeEffect)
+                {
+                    smoke.Stop();
+                }
+            }
+        }
         #region Variables
 
         // VFX
         private GameObject postProcessing;
         private ChromaticAberration chromaticAberration;
         private PostProcessVolume profile;
+
+        public ParticleSystem[] smokeEffect;
         // Damage
         public int gunDamage = 10;
 
@@ -230,14 +252,13 @@ namespace Scripts.PlayerController
         public AudioSource JetAudioSource;
         public AudioSource WarningSound;
         public AudioClip ShootSound;
-        public AudioClip PlayerSound;
 
         // Movement
         [SerializeField] private float forwardSpeed;
         [SerializeField] private float hoverSpeed;
         private float activeForwardSpeed, activeHoverSpeed;
         private const float ForwardAcceleration = 2.5f;
-        private const float HoverAcceleration = 2;
+      
 
         // Looking
         [SerializeField] private float lookRateSpeed = 90f;
