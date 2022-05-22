@@ -9,7 +9,6 @@ namespace Scripts.Camera
         public Transform FPP;
         public Transform spaceship;
         public bool firstperson;
-        public bool isZoomedIn;
         private UnityEngine.Camera camera;
         
         private void Start()
