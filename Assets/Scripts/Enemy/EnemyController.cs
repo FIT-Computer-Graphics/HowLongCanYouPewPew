@@ -1,5 +1,4 @@
 using Scripts.Asteroids;
-using Scripts.Enemy;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -16,8 +15,8 @@ public class EnemyController : MonoBehaviour, IDamageable
     public Slider healthBar;
     private Camera mainCam;
     private GameObject player;
-    [field: SerializeField]
-    private int Damage { get; set; }
+
+    [field: SerializeField] private int Damage { get; set; }
 
     private void Awake()
     {
@@ -39,9 +38,22 @@ public class EnemyController : MonoBehaviour, IDamageable
         CalculateHealthBar();
     }
 
+    public void TakeDamage(int damage)
+    {
+        health -= damage;
+        if (health > 0) return;
+
+        score.score += scoreValue;
+        score.enemiesKilled += 1;
+        PlayAudio();
+        PlayExplosionEffect();
+        Destroy(enemyMarker.gameObject);
+        Destroy(healthBar.gameObject);
+        Destroy(gameObject);
+    }
+
     private void CalculateHealthBar()
     {
-        // Make a slider for health bar from 0 to 1 in percentage of health vs max health.
         healthBar.value = (float) health / maxHealth;
         var screenPos = mainCam.WorldToScreenPoint(gameObject.transform.position);
         if (screenPos.z <= 0f) screenPos *= -1f;
@@ -59,14 +71,14 @@ public class EnemyController : MonoBehaviour, IDamageable
             screenPos.x < 0 || screenPos.y < 0 || screenPos.x > Screen.width || screenPos.y > Screen.height
                 ? new Vector3(0.6f, 0.6f, 0.6f)
                 : new Vector3(0.3f, 0.3f, 0.3f);
-        
+
         var image = enemyMarker.gameObject.GetComponent<Image>();
         image.color = new Color(image.color.r, image.color.g, image.color.b,
             screenPos.x < 0 || screenPos.y < 0 || screenPos.x > Screen.width || screenPos.y > Screen.height
                 ? 0.8f
                 : 0.1f);
 
-        switch ((float) health/maxHealth)
+        switch ((float) health / maxHealth)
         {
             // Enemies with health between 30 and 70 are yellow.
             case > 0.3f and < 0.7f:
@@ -106,20 +118,6 @@ public class EnemyController : MonoBehaviour, IDamageable
 
         enemyMarker.transform.position = screenPos;
         enemyMarker.transform.rotation = Quaternion.Euler(0, 0, 0);
-    }
-
-    public void TakeDamage(int damage)
-    {
-        health -= damage;
-        if (health > 0) return;
-
-        score.score += scoreValue;
-        score.enemiesKilled += 1;
-        PlayAudio();
-        PlayExplosionEffect();
-        Destroy(enemyMarker.gameObject);
-        Destroy(healthBar.gameObject);
-        Destroy(gameObject);
     }
 
     private void PlayExplosionEffect()

@@ -1,16 +1,15 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using Scripts.Asteroids;
 using Scripts.PlayerController;
 using UnityEngine;
-using Random = UnityEngine.Random;
+using UnityEngine.Serialization;
 
 namespace Scripts.Enemy
 {
     public class EnemyAI : MonoBehaviour
     {
-        public List<Vector3> EscapeDirections = new();
+        [FormerlySerializedAs("EscapeDirections")] public List<Vector3> escapeDirections = new();
 
         //AI Checks
         public bool chasing;
@@ -36,9 +35,10 @@ namespace Scripts.Enemy
 
         // Sound
 
-        public AudioSource ShipAudioSource;
-        public AudioClip ShootSound;
+        [FormerlySerializedAs("ShipAudioSource")] public AudioSource shipAudioSource;
+        [FormerlySerializedAs("ShootSound")] public AudioClip shootSound;
         [SerializeField] private int enemyDamage = 8;
+        public AudioClip[] hitSoundEffects;
         private float accumulatedTime;
         private int bulletsFired;
         private RaycastHit hitInfo;
@@ -47,10 +47,9 @@ namespace Scripts.Enemy
         private Transform obstacle;
         private bool overrideTarget;
         private SpaceShipController player;
+        private AudioSource playerHitEffectSource;
         private Ray ray;
         private bool savePos;
-        private AudioSource playerHitEffectSource;
-        public AudioClip[] hitSoundEffects;
 
         private Vector3 storeTarget;
         private Transform target;
@@ -127,10 +126,11 @@ namespace Scripts.Enemy
         private void FireBullet()
         {
             bulletsFired++;
-            // look at player with a random inaccuracy
-
+            
+            // Inaccuracy
             gameObject.transform.LookAt(target.transform.position +
-                                        new Vector3(Random.Range(-fireRandomness, fireRandomness), Random.Range(-fireRandomness, fireRandomness),
+                                        new Vector3(Random.Range(-fireRandomness, fireRandomness),
+                                            Random.Range(-fireRandomness, fireRandomness),
                                             Random.Range(-fireRandomness, fireRandomness)));
             // Muzzle Flash Stuff
             foreach (var particle in muzzleFlashes) particle.Emit(1);
@@ -148,29 +148,24 @@ namespace Scripts.Enemy
                     transform1.position = hitInfo.point;
                     transform1.forward = hitInfo.normal;
                     hitEffect.Emit(1);
-                    // shotEffect is smoke, instantiate it at the hit point then destroy it after 15s, parent to player
+                    
                     SpawnSmoke(hitInfo);
+                    
                     // Play a random hit sound once
                     playerHitEffectSource.PlayOneShot(hitSoundEffects[Random.Range(0, hitSoundEffects.Length)]);
-                    SpawnTracers();
-                  
-                        HandleDamage(hitInfo);
-                 
                     
+                    SpawnTracers();
+
+                    HandleDamage(hitInfo);
                 }
                 // If it doesn't, just make it go forward I guess idk
-                else
-                {
-                    SpawnTracers(true);
-                }
+                else SpawnTracers(true);
             }
-
-            // Play the sound
-            // Play the sound
-            ShipAudioSource.pitch = Random.Range(0.7f, 0.95f);
-            ShipAudioSource.PlayOneShot(ShootSound);
-            ShipAudioSource.pitch = Random.Range(0.7f, 0.95f);
-            ShipAudioSource.PlayOneShot(ShootSound);
+            
+            shipAudioSource.pitch = Random.Range(0.7f, 0.95f);
+            shipAudioSource.PlayOneShot(shootSound);
+            shipAudioSource.pitch = Random.Range(0.7f, 0.95f);
+            shipAudioSource.PlayOneShot(shootSound);
         }
 
         private void SpawnSmoke(RaycastHit raycastHit)
@@ -184,12 +179,9 @@ namespace Scripts.Enemy
             Destroy(effect, 15f);
         }
 
-        private void HandleDamage( RaycastHit raycastHit)
+        private void HandleDamage(RaycastHit raycastHit)
         {
-            
-                raycastHit.transform.GetComponent<IDamageable>().TakeDamage(enemyDamage);
-           
-            
+            raycastHit.transform.GetComponent<IDamageable>()?.TakeDamage(enemyDamage);
         }
 
         private void SpawnTracers(bool infinite = false)
@@ -221,7 +213,7 @@ namespace Scripts.Enemy
                 FindEscapeDirections(hit[i].collider);
             }
 
-            if (EscapeDirections.Count > 0)
+            if (escapeDirections.Count > 0)
                 if (!overrideTarget)
                 {
                     newTargetPos = GetClosests();
@@ -239,15 +231,15 @@ namespace Scripts.Enemy
             }
 
             overrideTarget = false;
-            EscapeDirections.Clear();
+            escapeDirections.Clear();
         }
 
         private Vector3 GetClosests()
         {
-            var clos = EscapeDirections[0];
-            var distance = Vector3.Distance(transform.position, EscapeDirections[0]);
+            var clos = escapeDirections[0];
+            var distance = Vector3.Distance(transform.position, escapeDirections[0]);
 
-            foreach (var dir in EscapeDirections)
+            foreach (var dir in escapeDirections)
             {
                 var tempDistance = Vector3.Distance(transform.position, dir);
                 if (!(tempDistance < distance)) continue;
@@ -262,50 +254,36 @@ namespace Scripts.Enemy
         {
             //Check for obstacles above
             var direct1 = col.transform.position + new Vector3(0, col.bounds.extents.y * 2 + 5, 0);
-            if (Physics.Raycast(col.transform.position, col.transform.up, out _, col.bounds.extents.y * 2 + 5))
-            {
-            }
-            else
+            if (!Physics.Raycast(col.transform.position, col.transform.up, out _, col.bounds.extents.y * 2 + 5))
             {
                 //if there is something above
 
-                if (!EscapeDirections.Contains(direct1)) EscapeDirections.Add(direct1);
+                if (!escapeDirections.Contains(direct1)) escapeDirections.Add(direct1);
             }
 
             //Check for obstacles below
-            if (Physics.Raycast(col.transform.position, -col.transform.up, out _, col.bounds.extents.y * 2 + 5))
-            {
-            }
-            else
+            if (!Physics.Raycast(col.transform.position, -col.transform.up, out _, col.bounds.extents.y * 2 + 5))
             {
                 //if there is something below
                 var dir = col.transform.position + new Vector3(0, -col.bounds.extents.y * 2 - 5, 0);
 
-                if (!EscapeDirections.Contains(dir)) EscapeDirections.Add(dir);
+                if (!escapeDirections.Contains(dir)) escapeDirections.Add(dir);
             }
-
             //Check for obstacles to the Right
             var direct2 = col.transform.position + new Vector3(col.bounds.extents.x * 2 + 5, 0, 0);
-            if (Physics.Raycast(col.transform.position, col.transform.right, out _, col.bounds.extents.x * 2 + 5))
-            {
-            }
-            else
+            if (!Physics.Raycast(col.transform.position, col.transform.right, out _, col.bounds.extents.x * 2 + 5))
             {
                 //if there is something to the right
 
-                if (!EscapeDirections.Contains(direct2)) EscapeDirections.Add(direct2);
+                if (!escapeDirections.Contains(direct2)) escapeDirections.Add(direct2);
             }
-
             //Check for obstacles to the Left
-            if (Physics.Raycast(col.transform.position, -col.transform.right, out _, col.bounds.extents.x * 2 + 5))
-            {
-            }
-            else
+            if (!Physics.Raycast(col.transform.position, -col.transform.right, out _, col.bounds.extents.x * 2 + 5))
             {
                 //if there is something to the right
                 direct2 = col.transform.position + new Vector3(-col.bounds.extents.x * 2 - 5, 0, 0);
 
-                if (!EscapeDirections.Contains(direct2)) EscapeDirections.Add(direct2);
+                if (!escapeDirections.Contains(direct2)) escapeDirections.Add(direct2);
             }
         }
 

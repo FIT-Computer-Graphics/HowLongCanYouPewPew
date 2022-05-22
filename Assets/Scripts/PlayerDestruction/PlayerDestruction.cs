@@ -1,15 +1,13 @@
-using System;
 using Scripts.Asteroids;
 using Scripts.PlayerController;
 using Scripts.World;
 using UnityEngine;
 using UnityEngine.Serialization;
-using Random = UnityEngine.Random;
 
 public class PlayerDestruction : MonoBehaviour
 {
     [SerializeField] private GameObject Asteroid;
-    private FakeInfiniteWorld _fakeInfiniteWorld;
+
     [FormerlySerializedAs("Player")] [SerializeField]
     private GameObject player;
 
@@ -20,16 +18,17 @@ public class PlayerDestruction : MonoBehaviour
 
     [FormerlySerializedAs("ScoreBoard")] public GameObject spaceboard;
     public GameObject spaceShip;
+    private FakeInfiniteWorld fakeInfiniteWorld;
     private bool isDead;
 
     private float timeRemaining = 3f;
 
     private void Start()
     {
-        _fakeInfiniteWorld = FindObjectOfType<FakeInfiniteWorld>();
+        fakeInfiniteWorld = FindObjectOfType<FakeInfiniteWorld>();
     }
 
-    private void Update()
+    private void FixedUpdate()
     {
         if (spaceShip) return;
 
@@ -41,9 +40,9 @@ public class PlayerDestruction : MonoBehaviour
     private void OnCollisionEnter(Collision collision)
     {
         player.GetComponent<IDamageable>().TakeDamage(105);
-        
+
         collision.gameObject.GetComponent<IDamageable>().TakeDamage(55);
-        StartCoroutine(_fakeInfiniteWorld.DoPostProcessing());
+        StartCoroutine(fakeInfiniteWorld.DoPostProcessing());
     }
 
     public void Die()

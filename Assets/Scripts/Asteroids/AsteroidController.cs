@@ -1,13 +1,12 @@
 using UnityEngine;
 
-
-
 namespace Scripts.Asteroids
 {
     public interface IDamageable
     {
         void TakeDamage(int damage);
     }
+
     public class AsteroidController : MonoBehaviour, IDamageable
     {
         public int health = 50;

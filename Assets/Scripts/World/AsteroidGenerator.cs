@@ -38,14 +38,13 @@ namespace Scripts.World
                 if (randomizeRotations)
                     objectsToPlace[i].transform.Rotate(Random.Range(0f, 360f), Random.Range(0f, 360f),
                         Random.Range(0f, 360f));
-                
+
                 if (randomizeScales)
                 {
-                    var xVector = Random.Range(scaleVariation/2, scaleVariation);
+                    var xVector = Random.Range(scaleVariation / 2, scaleVariation);
                     objectsToPlace[i].transform.localScale = new Vector3(xVector,
                         Random.Range(xVector * 0.4f, xVector * 1.6f),
                         Random.Range(xVector * 0.4f, xVector * 1.6f));
-
                 }
 
 
@@ -59,10 +58,7 @@ namespace Scripts.World
                 objectsToPlace[i].transform.parent = transform;
             }
 
-            foreach (var asteroid in asteroids)
-            {
-                asteroid.SetActive(false);
-            }
+            foreach (var asteroid in asteroids) asteroid.SetActive(false);
         }
 
 

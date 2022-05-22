@@ -2,6 +2,7 @@ using System;
 using Scripts.Asteroids;
 using UnityEngine;
 using UnityEngine.Rendering.PostProcessing;
+using UnityEngine.Serialization;
 using UnityEngine.UI;
 using Random = UnityEngine.Random;
 
@@ -15,7 +16,7 @@ namespace Scripts.PlayerController
             screenCenter.y = Screen.height * .5f;
             maxHealth = playerHealth;
             SetHealthBar();
-            ShipAudioSource.loop = true;
+            shipAudioSource.loop = true;
             postProcessing = GameObject.Find("PostProcessing");
             profile = postProcessing.GetComponent<PostProcessVolume>();
             chromaticAberration = profile.profile.GetSetting<ChromaticAberration>();
@@ -25,57 +26,59 @@ namespace Scripts.PlayerController
         {
             CalculateMovement();
             ToggleFiring();
-            SetHealthBar();
             CalculateShooting();
+        }
+
+        private void FixedUpdate()
+        {
             TestRegen();
             SetHealthBarVisibility();
             SetAudioOnMoving();
             TestWarningSound();
-            // TESTTESTTEST
-            //if (Input.GetKeyDown(KeyCode.Space)) EnemySpawner.GetComponent<EnemySpawner>().SpawnEnemies(10, 50);
+            SetHealthBar();
+        }
+
+        public void TakeDamage(int damage)
+        {
+            lastDamageTime = Time.time;
+            playerHealth -= damage;
+            if (!(playerHealth <= 0)) return;
+            GetComponent<PlayerDestruction>().Die();
         }
 
         private void TestWarningSound()
         {
-            // if health is less than 25% loop warning sound, stop if health is more than 25%
-            if (playerHealth < maxHealth * .25f && !WarningSound.isPlaying)
-            {
-                WarningSound.Play();
-            }
-            else if (playerHealth >= maxHealth * .25f && WarningSound.isPlaying)
-            {
-                WarningSound.Stop();
-            }
-            else switch (WarningSound.isPlaying)
-            {
-                case true:
-                    chromaticAberration.intensity.value += Time.deltaTime * 3;
-                    break;
-                case false:
-                    chromaticAberration.intensity.value -= Time.deltaTime * 3;
-                    break;
-            }
+            if (playerHealth < maxHealth * .25f && !warningSound.isPlaying)
+                warningSound.Play();
+            else if (playerHealth >= maxHealth * .25f && warningSound.isPlaying)
+                warningSound.Stop();
+            else
+                switch (warningSound.isPlaying)
+                {
+                    case true:
+                        chromaticAberration.intensity.value += Time.deltaTime * 3;
+                        break;
+                    case false:
+                        chromaticAberration.intensity.value -= Time.deltaTime * 3;
+                        break;
+                }
         }
 
         private void SetAudioOnMoving()
         {
-            // Play playersound while W is held, if released gradually fade out
             if (Input.GetKey(KeyCode.W))
             {
-                var volume = JetAudioSource.volume + Time.deltaTime * .08f;
-                JetAudioSource.volume = Mathf.Clamp(volume, 0, 0.08f);
-                if (!JetAudioSource.isPlaying) JetAudioSource.Play();
+                var volume = jetAudioSource.volume + Time.deltaTime * .08f;
+                jetAudioSource.volume = Mathf.Clamp(volume, 0, 0.08f);
+                if (!jetAudioSource.isPlaying) jetAudioSource.Play();
             }
             else
             {
-                JetAudioSource.volume -=Time.deltaTime * .1f;
-                if (JetAudioSource.volume <= 0)
-                {
-                    JetAudioSource.Stop();
-                }
+                jetAudioSource.volume -= Time.deltaTime * .1f;
+                if (jetAudioSource.volume <= 0) jetAudioSource.Stop();
             }
-          
         }
+
         private void SetHealthBarVisibility()
         {
             if (Math.Abs(healthBar.value - 1f) < 0.01f)
@@ -92,7 +95,6 @@ namespace Scripts.PlayerController
 
         private void TestRegen()
         {
-            // regen if last damage was more than 10 seconds ago
             isRegenerating = Time.time - lastDamageTime > 5;
             if (!isRegenerating || !(playerHealth < maxHealth)) return;
             playerHealth += Time.deltaTime * 0.50f * playerHealth;
@@ -119,10 +121,8 @@ namespace Scripts.PlayerController
 
         private void FireBullet()
         {
-            // Muzzle Flash Stuff
             foreach (var particle in muzzleFlashes) particle.Emit(1);
 
-            // Pew Pew
             foreach (var origin in raycastOrigin)
             {
                 ray.origin = origin.position;
@@ -147,16 +147,17 @@ namespace Scripts.PlayerController
             }
 
             // Play the sound
-            ShipAudioSource.pitch = Random.Range(0.7f, 0.95f);
-            ShipAudioSource.PlayOneShot(ShootSound);
-            ShipAudioSource.pitch = Random.Range(0.7f, 0.95f);
-            ShipAudioSource.PlayOneShot(ShootSound);
+            shipAudioSource.pitch = Random.Range(0.7f, 0.95f);
+            shipAudioSource.PlayOneShot(shootSound);
+            shipAudioSource.pitch = Random.Range(0.7f, 0.95f);
+            shipAudioSource.PlayOneShot(shootSound);
         }
 
         private void HandleDamage(RaycastHit raycastHit)
         {
-            raycastHit.transform.GetComponent<IDamageable>().TakeDamage(gunDamage);
+            raycastHit.transform.GetComponent<IDamageable>()?.TakeDamage(gunDamage);
         }
+
 
         private void SpawnTracers(bool infinite = false)
         {
@@ -183,11 +184,11 @@ namespace Scripts.PlayerController
 
             transform.Rotate(-mouseDistance.y * lookRateSpeed * Time.deltaTime,
                 mouseDistance.x * lookRateSpeed * Time.deltaTime, rollInput * RollSpeed * Time.deltaTime, Space.Self);
+            
 
             activeForwardSpeed = Mathf.Lerp(activeForwardSpeed, Input.GetAxis("Vertical") * forwardSpeed,
                 ForwardAcceleration * Time.deltaTime);
 
-            
 
             var transform1 = transform;
             transform1.position += activeForwardSpeed * Time.deltaTime * transform1.forward +
@@ -197,15 +198,6 @@ namespace Scripts.PlayerController
         private void SetHealthBar()
         {
             healthBar.value = playerHealth / maxHealth;
-        }
-
-        public void TakeDamage(int damage)
-        {
-            lastDamageTime = Time.time;
-            playerHealth -= damage;
-            if (!(playerHealth <= 0)) return;
-            var playerDestruction = GetComponent<PlayerDestruction>();
-            playerDestruction.Die();
         }
 
         #region Variables
@@ -219,21 +211,22 @@ namespace Scripts.PlayerController
         public int gunDamage = 10;
 
         // Sounds
-        public AudioSource ShipAudioSource;
-        public AudioSource JetAudioSource;
-        public AudioSource WarningSound;
-        public AudioClip ShootSound;
+        [FormerlySerializedAs("ShipAudioSource")] public AudioSource shipAudioSource;
+        [FormerlySerializedAs("JetAudioSource")] public AudioSource jetAudioSource;
+        [FormerlySerializedAs("WarningSound")] public AudioSource warningSound;
+        [FormerlySerializedAs("ShootSound")] public AudioClip shootSound;
 
         // Movement
         [SerializeField] private float forwardSpeed;
         [SerializeField] private float hoverSpeed;
         private float activeForwardSpeed, activeHoverSpeed;
         private const float ForwardAcceleration = 2.5f;
-      
+
 
         // Looking
         [SerializeField] private float lookRateSpeed = 90f;
-        private Vector2 lookInput, screenCenter, mouseDistance;
+        public Vector2 mouseDistance;
+        private Vector2 lookInput, screenCenter;
 
         private float rollInput;
         private const float RollSpeed = 90f;

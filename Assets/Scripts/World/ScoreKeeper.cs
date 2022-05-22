@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.Serialization;
 using UnityEngine.UI;
 
 public class ScoreKeeper : MonoBehaviour
@@ -9,13 +10,13 @@ public class ScoreKeeper : MonoBehaviour
     public int currentWave;
     public Text enemiesKilledText;
     public Text endScore;
-    public Text WaveCounter;
+    [FormerlySerializedAs("WaveCounter")] public Text waveCounter;
 
 
     private void Update()
     {
         enemiesKilledText.text = "Enemies Killed: " + enemiesKilled;
         endScore.text = "Score: " + score;
-        WaveCounter.text = $"Wave: {currentWave}";
+        waveCounter.text = $"Wave: {currentWave}";
     }
 }

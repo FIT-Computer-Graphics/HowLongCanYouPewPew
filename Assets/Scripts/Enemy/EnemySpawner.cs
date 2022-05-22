@@ -8,9 +8,9 @@ namespace Scripts.Enemy
         public GameObject[] enemies;
         public Transform player;
         public ScoreKeeper score;
-        public int amount ;
-        private float timeLeft = 5;
+        public int amount;
         public AudioSource audioSource;
+        private float timeLeft = 5;
 
         private void Awake()
         {
@@ -27,7 +27,7 @@ namespace Scripts.Enemy
             // Randomly spawn enemies around the player
             if (!(Timer() < 0)) return;
             audioSource.Play();
-            
+
             // range can be -rangeAroundPlayer to +rangeAroundPlayer but not between -10 and 10
             var randomRange = Random.Range(-rangeAroundPlayer, rangeAroundPlayer);
             if (randomRange is > -40 and < 40) randomRange += 40;

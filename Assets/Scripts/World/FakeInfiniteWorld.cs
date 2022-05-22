@@ -1,13 +1,14 @@
 using System.Collections;
 using UnityEngine;
 using UnityEngine.Rendering.PostProcessing;
+using UnityEngine.Serialization;
 
 namespace Scripts.World
 {
     public class FakeInfiniteWorld : MonoBehaviour
     {
         [SerializeField] private Transform player;
-        public GameObject PostProcessing;
+        [FormerlySerializedAs("PostProcessing")] public GameObject postProcessing;
         private AsteroidGenerator asteroidGenerator;
         private ChromaticAberration chromaticAberration;
         private LensDistortion lensDistortion;
@@ -18,8 +19,8 @@ namespace Scripts.World
         {
             asteroidGenerator = GetComponentInChildren<AsteroidGenerator>();
             mapSize = asteroidGenerator.spawnRange * 0.8f;
-            PostProcessing = GameObject.Find("PostProcessing");
-            profile = PostProcessing.GetComponent<PostProcessVolume>();
+            postProcessing = GameObject.Find("PostProcessing");
+            profile = postProcessing.GetComponent<PostProcessVolume>();
             lensDistortion = profile.profile.GetSetting<LensDistortion>();
             chromaticAberration = profile.profile.GetSetting<ChromaticAberration>();
         }
@@ -44,14 +45,14 @@ namespace Scripts.World
 
         public IEnumerator DoPostProcessing()
         {
-            var LDintensity = lensDistortion.intensity.value;
-            var CAintensity = chromaticAberration.intensity.value;
+            var lensDistortionIntensity = lensDistortion.intensity.value;
+            var chromaticAberrationIntensity = chromaticAberration.intensity.value;
             var duration = 0.2f;
             var startTime = Time.time;
             while (Time.time - startTime < duration)
             {
-                chromaticAberration.intensity.value = Mathf.Lerp(CAintensity, 1f, (Time.time - startTime) / duration);
-                lensDistortion.intensity.value = Mathf.Lerp(LDintensity, -50f, (Time.time - startTime) / duration);
+                chromaticAberration.intensity.value = Mathf.Lerp(chromaticAberrationIntensity, 1f, (Time.time - startTime) / duration);
+                lensDistortion.intensity.value = Mathf.Lerp(lensDistortionIntensity, -50f, (Time.time - startTime) / duration);
                 yield return null;
             }
 

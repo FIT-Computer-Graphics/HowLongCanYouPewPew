@@ -18,7 +18,6 @@ namespace Scripts.Scenes
             if (spaceShip == null) return;
 
 
-
             //one escape pause
             if (!Input.GetKeyDown(KeyCode.Escape)) return;
             switch (paused)
