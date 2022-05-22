@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Scripts.Asteroids;
 using Scripts.PlayerController;
 using UnityEngine;
 
@@ -29,6 +30,7 @@ namespace Scripts.Enemy
         public TrailRenderer[] tracerEffects;
         public float fireRandomness = 2f;
         public int fireRate = 10;
+        public ParticleSystem shotEffect;
 
         // Sound
 
@@ -45,6 +47,8 @@ namespace Scripts.Enemy
         private SpaceShipController player;
         private Ray ray;
         private bool savePos;
+        private AudioSource playerHitEffectSource;
+        public AudioClip[] hitSoundEffects;
 
         private Vector3 storeTarget;
         private Transform target;
@@ -54,6 +58,8 @@ namespace Scripts.Enemy
             target = GameObject.FindGameObjectWithTag("Player").transform;
             myTransform = transform;
             player = GameObject.FindGameObjectWithTag("Player").GetComponent<SpaceShipController>();
+            // It's an object called HitEffectSource thats is a child of target
+            playerHitEffectSource = target.Find("HitEffectSource").GetComponent<AudioSource>();
             StartCoroutine(HeatDissipate());
         }
 
@@ -140,8 +146,12 @@ namespace Scripts.Enemy
                     transform1.position = hitInfo.point;
                     transform1.forward = hitInfo.normal;
                     hitEffect.Emit(1);
-
+                    // shotEffect is smoke, instantiate it at the hit point then destroy it after 15s, parent to player
+                    SpawnSmoke(hitInfo);
+                    // Play a random hit sound once
+                    playerHitEffectSource.PlayOneShot(hitSoundEffects[Random.Range(0, hitSoundEffects.Length)]);
                     SpawnTracers();
+
                     HandleDamage(hitInfo);
                 }
                 // If it doesn't, just make it go forward I guess idk
@@ -159,14 +169,20 @@ namespace Scripts.Enemy
             ShipAudioSource.PlayOneShot(ShootSound);
         }
 
+        private void SpawnSmoke(RaycastHit raycastHit)
+        {
+            // 10% of spawning smoke
+            if (Random.Range(0, 101) > 10) return;
+            var effect = Instantiate(shotEffect, raycastHit.point, Quaternion.identity);
+            var transform1 = effect.transform;
+            transform1.rotation = Quaternion.FromToRotation(Vector3.up, raycastHit.normal);
+            transform1.parent = target.transform;
+            Destroy(effect, 15f);
+        }
+
         private void HandleDamage(RaycastHit raycastHit)
         {
-            switch (raycastHit.transform.gameObject.tag)
-            {
-                case "Player":
-                    player.TakeDamage(enemyDamage);
-                    break;
-            }
+            raycastHit.transform.GetComponent<IDamageable>().TakeDamage(enemyDamage);
         }
 
         private void SpawnTracers(bool infinite = false)

@@ -7,7 +7,7 @@ using Random = UnityEngine.Random;
 
 namespace Scripts.PlayerController
 {
-    public class SpaceShipController : MonoBehaviour
+    public class SpaceShipController : MonoBehaviour, IDamageable
     {
         private void Start()
         {
@@ -31,7 +31,6 @@ namespace Scripts.PlayerController
             SetHealthBarVisibility();
             SetAudioOnMoving();
             TestWarningSound();
-            SmokeEfect();
             // TESTTESTTEST
             //if (Input.GetKeyDown(KeyCode.Space)) EnemySpawner.GetComponent<EnemySpawner>().SpawnEnemies(10, 50);
         }
@@ -156,7 +155,7 @@ namespace Scripts.PlayerController
 
         private void HandleDamage(RaycastHit raycastHit)
         {
-            hitInfo.transform.GetComponent<IDamageable>().TakeDamage(gunDamage);
+            raycastHit.transform.GetComponent<IDamageable>().TakeDamage(gunDamage);
         }
 
         private void SpawnTracers(bool infinite = false)
@@ -209,25 +208,6 @@ namespace Scripts.PlayerController
             playerDestruction.Die();
         }
 
-        public void SmokeEfect()
-        {
-          
-            if (playerHealth/maxHealth<0.5f)
-            {
-                foreach (var smoke in smokeEffect)
-                {
-                    smoke.Play();
-                    
-                }
-            }
-            else
-            {
-                foreach (var smoke in smokeEffect)
-                {
-                    smoke.Stop();
-                }
-            }
-        }
         #region Variables
 
         // VFX
@@ -235,7 +215,6 @@ namespace Scripts.PlayerController
         private ChromaticAberration chromaticAberration;
         private PostProcessVolume profile;
 
-        public ParticleSystem[] smokeEffect;
         // Damage
         public int gunDamage = 10;
 

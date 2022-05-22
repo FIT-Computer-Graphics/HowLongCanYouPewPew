@@ -42,7 +42,7 @@ namespace Scripts.World
             if (Vector3.Distance(currentPosition, player.position) > 200f) StartCoroutine(DoPostProcessing());
         }
 
-        private IEnumerator DoPostProcessing()
+        public IEnumerator DoPostProcessing()
         {
             var LDintensity = lensDistortion.intensity.value;
             var CAintensity = chromaticAberration.intensity.value;

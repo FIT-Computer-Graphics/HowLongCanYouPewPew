@@ -707,16 +707,24 @@ MonoBehaviour:
   raycastOrigin:
   - {fileID: 8084243912437127534}
   - {fileID: 5094192743203165164}
-  hitEffect: {fileID: 7490567760343040465, guid: 878ed484ba70e4942ac973b4de1a49be,
+  hitEffect: {fileID: 288857005655296685, guid: 1a22ca70634c04d438c75247599828d6,
     type: 3}
   tracerEffects:
   - {fileID: 1822917915554655671, guid: ac1a633c3136d0d4292bcc7b5a7784c7, type: 3}
   - {fileID: 1822917915554655671, guid: ac1a633c3136d0d4292bcc7b5a7784c7, type: 3}
   fireRandomness: 2
   fireRate: 5
+  shotEffect: {fileID: 288857005655296685, guid: 1a22ca70634c04d438c75247599828d6,
+    type: 3}
   ShipAudioSource: {fileID: 8226139698867895311}
   ShootSound: {fileID: 8300000, guid: a5c42edce299c3a4abc797189cd603b2, type: 3}
   enemyDamage: 3
+  hitSoundEffects:
+  - {fileID: 8300000, guid: 7230257689cf9744e994eed7f4809d3e, type: 3}
+  - {fileID: 8300000, guid: 94fd46d5a8fe15e4e8d4734b00059681, type: 3}
+  - {fileID: 8300000, guid: 46a06a18a6524c441880eb382c0f9b41, type: 3}
+  - {fileID: 8300000, guid: 4e54760de83115a45bf7790b214f62a5, type: 3}
+  - {fileID: 8300000, guid: d6bf58a8221833a41aa243e36451f84a, type: 3}
 --- !u!64 &2378778330279047605
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -952,7 +960,7 @@ AudioSource:
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 0}
   m_PlayOnAwake: 1
-  m_Volume: 1
+  m_Volume: 0.446
   m_Pitch: 1
   Loop: 0
   Mute: 0
