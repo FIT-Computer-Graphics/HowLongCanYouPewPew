@@ -1,8 +1,9 @@
+using Scripts.Asteroids;
 using Scripts.Enemy;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class EnemyController : MonoBehaviour
+public class EnemyController : MonoBehaviour, IDamageable
 {
     // Start is called before the first frame update
     public int health;
@@ -15,6 +16,8 @@ public class EnemyController : MonoBehaviour
     public Slider healthBar;
     private Camera mainCam;
     private GameObject player;
+    [field: SerializeField]
+    private int Damage { get; set; }
 
     private void Awake()
     {

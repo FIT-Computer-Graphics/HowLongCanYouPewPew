@@ -1,20 +1,25 @@
 using UnityEngine;
 
+
+
 namespace Scripts.Asteroids
 {
-    public class AsteroidController : MonoBehaviour
+    public interface IDamageable
     {
-        public int health = 100;
-        public int damagePerShot = 30;
+        void TakeDamage(int damage);
+    }
+    public class AsteroidController : MonoBehaviour, IDamageable
+    {
+        public int health = 50;
         public ParticleSystem explosionEffect;
         public AudioClip[] explosionSounds;
 
 
-        public void TakeDamage()
+        public void TakeDamage(int damage)
         {
             if (gameObject == null) return;
             if (health <= 0) return;
-            health -= damagePerShot;
+            health -= damage;
             if (health > 0) return;
             Die();
         }

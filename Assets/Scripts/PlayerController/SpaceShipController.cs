@@ -129,7 +129,7 @@ namespace Scripts.PlayerController
                 ray.direction = origin.forward;
 
                 // If it hits, make the laser go there
-                if (Physics.Raycast(ray, out hitInfo, 100f))
+                if (Physics.Raycast(ray, out hitInfo, 100f, LayerMask.GetMask("Damageable")))
                 {
                     var transform1 = hitEffect.transform;
                     transform1.position = hitInfo.point;
@@ -155,15 +155,7 @@ namespace Scripts.PlayerController
 
         private void HandleDamage(RaycastHit raycastHit)
         {
-            switch (raycastHit.transform.gameObject.tag)
-            {
-                case "Asteroid":
-                    hitInfo.transform.GetComponent<AsteroidController>().TakeDamage();
-                    break;
-                case "Enemy":
-                    hitInfo.transform.GetComponent<EnemyController>().TakeDamage(gunDamage);
-                    break;
-            }
+            hitInfo.transform.GetComponent<IDamageable>().TakeDamage(gunDamage);
         }
 
         private void SpawnTracers(bool infinite = false)

@@ -14,7 +14,7 @@ public class PlayerDestruction : MonoBehaviour
 
     public AudioClip[] explosionSounds;
 
-    public GameObject ScoreBoard;
+    [FormerlySerializedAs("ScoreBoard")] public GameObject spaceboard;
     public GameObject spaceShip;
     private bool isDead;
 
@@ -26,7 +26,7 @@ public class PlayerDestruction : MonoBehaviour
 
         player.GetComponent<SpaceShipController>().enabled = false;
         if (timeRemaining > 0) timeRemaining -= Time.deltaTime;
-        else ScoreBoard.SetActive(true);
+        else spaceboard.SetActive(true);
     }
 
     private void OnCollisionEnter(Collision collision)

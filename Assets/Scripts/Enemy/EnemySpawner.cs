@@ -22,7 +22,7 @@ namespace Scripts.Enemy
             if (GameObject.FindGameObjectWithTag(enemies[0].tag) == null) SpawnEnemies(amount, 40);
         }
 
-        private void SpawnEnemies(int _amount, float rangeAroundPlayer)
+        private void SpawnEnemies(int amountOfEnemies, float rangeAroundPlayer)
         {
             // Randomly spawn enemies around the player
             if (!(Timer() < 0)) return;
@@ -31,7 +31,7 @@ namespace Scripts.Enemy
             // range can be -rangeAroundPlayer to +rangeAroundPlayer but not between -10 and 10
             var randomRange = Random.Range(-rangeAroundPlayer, rangeAroundPlayer);
             if (randomRange is > -40 and < 40) randomRange += 40;
-            StartCoroutine(SpawnThem(_amount, randomRange));
+            StartCoroutine(SpawnThem(amountOfEnemies, randomRange));
 
             amount += 1;
             timeLeft = 5;

@@ -11,7 +11,6 @@ namespace Scripts.Enemy
 
         //AI Checks
         public bool chasing;
-        public bool evading;
 
         //AI stuff
         public float rotationSpeed;
@@ -294,8 +293,7 @@ namespace Scripts.Enemy
             Debug.DrawRay(position + new Vector3(offsetX, 0, 0), direction * (10 * moveSpeed), Color.red);
 
             var distanceToLookAhead = moveSpeed * 5;
-
-            //Adjust 5 to proper radius around object to pick up raycast hits
+            
             var results = new RaycastHit[] { };
             Physics.SphereCastNonAlloc(ray, 5, results, distanceToLookAhead);
             return results;

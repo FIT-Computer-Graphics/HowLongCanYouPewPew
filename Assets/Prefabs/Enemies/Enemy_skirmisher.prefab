@@ -15,7 +15,7 @@ GameObject:
   - component: {fileID: 2378778330279047605}
   - component: {fileID: 5275554396167727622}
   - component: {fileID: -3178933489486062482}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: Enemy_skirmisher
   m_TagString: Enemy
   m_Icon: {fileID: 0}
@@ -110,7 +110,6 @@ MonoBehaviour:
   - {x: 0, y: 0, z: -45}
   - {x: -45, y: 0, z: 0}
   chasing: 1
-  evading: 1
   rotationSpeed: 4
   maxDist: 500
   minDist: 15
@@ -171,6 +170,7 @@ MonoBehaviour:
     type: 3}
   healthBar: {fileID: 5785055324033748793, guid: 61450fe8ae9edfc48bd6b86600b19535,
     type: 3}
+  <Damage>k__BackingField: 1
 --- !u!54 &-3178933489486062482
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -197,7 +197,7 @@ GameObject:
   m_Component:
   - component: {fileID: 295533051353769745}
   - component: {fileID: 8226139698867895311}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: Audio Source
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -382,6 +382,21 @@ PrefabInstance:
       propertyPath: m_Name
       value: GunRight
       objectReference: {fileID: 0}
+    - target: {fileID: 5987981534782792462, guid: 01dc949b9e7a09e40ad15bd186519026,
+        type: 3}
+      propertyPath: m_Layer
+      value: 11
+      objectReference: {fileID: 0}
+    - target: {fileID: 5989366567998551298, guid: 01dc949b9e7a09e40ad15bd186519026,
+        type: 3}
+      propertyPath: m_Layer
+      value: 11
+      objectReference: {fileID: 0}
+    - target: {fileID: 5989687444977060008, guid: 01dc949b9e7a09e40ad15bd186519026,
+        type: 3}
+      propertyPath: m_Layer
+      value: 11
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 01dc949b9e7a09e40ad15bd186519026, type: 3}
 --- !u!198 &4932128072785937629 stripped
@@ -403,10 +418,25 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 4280905051309938068}
     m_Modifications:
+    - target: {fileID: 7611140548092884571, guid: 6b44bed3e99860f45845480f946bb5e2,
+        type: 3}
+      propertyPath: m_Layer
+      value: 11
+      objectReference: {fileID: 0}
+    - target: {fileID: 7611384459324754929, guid: 6b44bed3e99860f45845480f946bb5e2,
+        type: 3}
+      propertyPath: m_Layer
+      value: 11
+      objectReference: {fileID: 0}
     - target: {fileID: 7613089237368644288, guid: 6b44bed3e99860f45845480f946bb5e2,
         type: 3}
       propertyPath: m_Name
       value: GunLeft
+      objectReference: {fileID: 0}
+    - target: {fileID: 7613089237368644288, guid: 6b44bed3e99860f45845480f946bb5e2,
+        type: 3}
+      propertyPath: m_Layer
+      value: 11
       objectReference: {fileID: 0}
     - target: {fileID: 7613089237368644289, guid: 6b44bed3e99860f45845480f946bb5e2,
         type: 3}
