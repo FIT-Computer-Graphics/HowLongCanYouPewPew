@@ -1,8 +1,10 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using Scripts.Asteroids;
 using Scripts.PlayerController;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 namespace Scripts.Enemy
 {
@@ -151,8 +153,10 @@ namespace Scripts.Enemy
                     // Play a random hit sound once
                     playerHitEffectSource.PlayOneShot(hitSoundEffects[Random.Range(0, hitSoundEffects.Length)]);
                     SpawnTracers();
-
-                    HandleDamage(hitInfo);
+                  
+                        HandleDamage(hitInfo);
+                 
+                    
                 }
                 // If it doesn't, just make it go forward I guess idk
                 else
@@ -180,9 +184,12 @@ namespace Scripts.Enemy
             Destroy(effect, 15f);
         }
 
-        private void HandleDamage(RaycastHit raycastHit)
+        private void HandleDamage( RaycastHit raycastHit)
         {
-            raycastHit.transform.GetComponent<IDamageable>().TakeDamage(enemyDamage);
+            
+                raycastHit.transform.GetComponent<IDamageable>().TakeDamage(enemyDamage);
+           
+            
         }
 
         private void SpawnTracers(bool infinite = false)
@@ -306,10 +313,7 @@ namespace Scripts.Enemy
         {
             var position = transform.position;
             var ray = new Ray(position + new Vector3(offsetX, 0, 0), direction);
-            Debug.DrawRay(position + new Vector3(offsetX, 0, 0), direction * (10 * moveSpeed), Color.red);
-
             var distanceToLookAhead = moveSpeed * 5;
-            
             var results = new RaycastHit[] { };
             Physics.SphereCastNonAlloc(ray, 5, results, distanceToLookAhead);
             return results;

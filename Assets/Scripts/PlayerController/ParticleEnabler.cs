@@ -26,9 +26,6 @@ public class ParticleEnabler : MonoBehaviour
             leftThruster.SetActive(false);
             rightThruster.SetActive(false);
         }
-     
-      
-        
-      
+
     }
 }

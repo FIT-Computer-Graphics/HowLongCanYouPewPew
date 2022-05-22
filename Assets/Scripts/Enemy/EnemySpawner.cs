@@ -8,7 +8,7 @@ namespace Scripts.Enemy
         public GameObject[] enemies;
         public Transform player;
         public ScoreKeeper score;
-        public int amount = 50;
+        public int amount ;
         private float timeLeft = 5;
         public AudioSource audioSource;
 
