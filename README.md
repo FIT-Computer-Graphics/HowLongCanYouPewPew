@@ -7,19 +7,13 @@ You can download and play it [**here**](https://github.com/FIT-Computer-Graphics
 
 
 ## Controls
-`W` and `S` - Forward and back thrusters (move forward and backward)
-
-`A` and `D` - Rotate horizontally, left and right respectivelly.
-
-`Mouse1` - Shoot
-
-`Mouse2` - Zoom in
-
-`Mouse Movement` - Finer rotation
-
-`V` - Change your viewpoint between front and 3rd person cameras.
-
-`Scroll` - While using front camera, you can use this to further zoom in, or out, whatever floats your boat.
+- `W` and `S` - Forward and back thrusters (move forward and backward)
+- `A` and `D` - Rotate horizontally, left and right respectivelly.
+- `Mouse1` - Shoot
+- `Mouse2` - Zoom in
+- `Mouse Movement` - Finer rotation
+- `V` - Change your viewpoint between front and 3rd person cameras.
+  - `Scroll` - While using front camera, you can use this to further zoom in, or out, whatever floats your boat.
 
 ## Credits
 Built by [@omznc](https://github.com/omznc/) and [@kenanalic20](https://github.com/kenanalic20/).
