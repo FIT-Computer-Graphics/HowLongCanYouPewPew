@@ -31,3 +31,4 @@ Special thanks to:
 - The thirty million Youtube tutorials out there
 
 ## License
+This code is licensed under the [Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License](https://creativecommons.org/licenses/by-nc-sa/4.0/), available [here](https://github.com/FIT-Computer-Graphics/HowLongCanYouPewPew/blob/main/LICENSE.md).
