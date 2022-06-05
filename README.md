@@ -3,4 +3,4 @@
 
 ## A Unity game build for our computer graphics class.
 
-You can try it out [here](https://github.com/omznc/SpaceFight/releases/tag/1.0).
+You can download and play it [here]([https://github.com/omznc/SpaceFight/releases/tag/1.0](https://github.com/FIT-Computer-Graphics/HowLongCanYouPewPew/releases/latest/download/SpaceFight.7z)).
