@@ -22,7 +22,7 @@ You can download and play it [**here**](https://github.com/FIT-Computer-Graphics
 `Scroll` - While using front camera, you can use this to further zoom in, or out, whatever floats your boat.
 
 ## Credits
-Built by @omznc and @kenanalic20.
+Built by [@omznc](https://github.com/omznc/) and [@kenanalic20](https://github.com/kenanalic20/).
 
 Special thanks to:
 - Unity Asset Store
