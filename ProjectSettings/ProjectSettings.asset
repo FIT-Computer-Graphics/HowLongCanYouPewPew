@@ -13,16 +13,16 @@ PlayerSettings:
   useOnDemandResources: 0
   accelerometerFrequency: 60
   companyName: DefaultCompany
-  productName: Space fight
-  defaultCursor: {fileID: 0}
+  productName: How Long Can You PEW PEW
+  defaultCursor: {fileID: 2800000, guid: beb07d7bf5d04044f906902076622e30, type: 3}
   cursorHotspot: {x: 0, y: 0}
-  m_SplashScreenBackgroundColor: {r: 0.13725491, g: 0.12156863, b: 0.1254902, a: 1}
+  m_SplashScreenBackgroundColor: {r: 0.3490566, g: 0.3490566, b: 0.3490566, a: 1}
   m_ShowUnitySplashScreen: 1
   m_ShowUnitySplashLogo: 1
   m_SplashScreenOverlayOpacity: 1
-  m_SplashScreenAnimation: 1
+  m_SplashScreenAnimation: 0
   m_SplashScreenLogoStyle: 1
-  m_SplashScreenDrawMode: 0
+  m_SplashScreenDrawMode: 1
   m_SplashScreenBackgroundAnimationZoom: 1
   m_SplashScreenLogoAnimationZoom: 1
   m_SplashScreenBackgroundLandscapeAspect: 1
@@ -39,7 +39,13 @@ PlayerSettings:
     y: 0
     width: 1
     height: 1
-  m_SplashScreenLogos: []
+  m_SplashScreenLogos:
+  - logo: {fileID: 10404, guid: 0000000000000000e000000000000000, type: 0}
+    duration: 2
+  - logo: {fileID: 21300000, guid: 7512f195179e7d6449fa443917bc15a4, type: 3}
+    duration: 4
+  - logo: {fileID: 21300000, guid: bddf9ee1ae319654c915e9b960d7c812, type: 3}
+    duration: 4
   m_VirtualRealitySplashScreen: {fileID: 0}
   m_HolographicTrackingLossScreen: {fileID: 0}
   defaultScreenWidth: 1024
@@ -155,7 +161,7 @@ PlayerSettings:
   androidMaxAspectRatio: 2.1
   applicationIdentifier:
     Android: com.Company.ProductName
-    Standalone: com.DefaultCompany.Space-fight
+    Standalone: com.DefaultCompany.How-Long-Can-You-PEW-PEW
     Tizen: com.Company.ProductName
     iPhone: com.Company.ProductName
     tvOS: com.Company.ProductName
@@ -276,7 +282,7 @@ PlayerSettings:
   - m_BuildTarget: 
     m_Icons:
     - serializedVersion: 2
-      m_Icon: {fileID: 0}
+      m_Icon: {fileID: 2800000, guid: b7cf0df6dc0a1ff48b8107438c41ffef, type: 3}
       m_Width: 128
       m_Height: 128
       m_Kind: 0
