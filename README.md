@@ -3,7 +3,7 @@
 
 ## A Unity game built for our computer graphics class.
 
-You can download and play it [**here**](https://github.com/FIT-Computer-Graphics/HowLongCanYouPewPew/releases/latest/download/SpaceFight.7z).
+You can download and play it [**here**](https://github.com/FIT-Computer-Graphics/HowLongCanYouPewPew/releases/latest/download/SpaceFight-setup.exe).
 
 
 ## Controls
